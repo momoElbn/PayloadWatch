@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## Environment Files ###
+.env
+.env.local
+.env.*.local
+
+## Vanilla JS ##
+node_modules/
+dist/
