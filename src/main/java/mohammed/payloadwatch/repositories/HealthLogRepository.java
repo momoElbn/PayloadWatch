@@ -1,4 +1,4 @@
 package mohammed.payloadwatch.repositories;
 
-public class HealthLogRepository {
+public interface HealthLogRepository {
 }
