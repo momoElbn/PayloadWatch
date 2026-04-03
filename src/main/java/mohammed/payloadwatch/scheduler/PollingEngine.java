@@ -1,5 +1,6 @@
 package mohammed.payloadwatch.scheduler;
 
+import jakarta.transaction.Transactional;
 import mohammed.payloadwatch.entities.Contract;
 import mohammed.payloadwatch.entities.HealthLog;
 import mohammed.payloadwatch.entities.Monitor;
@@ -38,7 +39,8 @@ public class PollingEngine {
                 .build();
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 10000)
+    @Transactional
     public void pollEndpoints() {
         System.out.println("Polling endpoints for new payloads...");
 

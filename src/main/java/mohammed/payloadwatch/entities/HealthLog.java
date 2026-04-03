@@ -1,5 +1,6 @@
 package mohammed.payloadwatch.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class HealthLog {
             updatable = false
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Monitor monitor;
 
     @Column(

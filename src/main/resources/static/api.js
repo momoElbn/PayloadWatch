@@ -1,30 +1,33 @@
 // api.js
+const API_BASE_URL = "http://localhost:8080/api";
+
 const API = {
     async request(endpoint, options = {}) {
-        const token = Auth.getToken();
+        const token = localStorage.getItem('jwt');
+
+        // If no token exists, kick them back to login immediately
+        if (!token) {
+            window.location.href = 'login.html';
+            return null;
+        }
 
         const headers = {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // The VIP Pass
             ...options.headers
         };
-
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
 
         const config = { ...options, headers };
 
         try {
-            // === MOCK API LOGIC (REPLACE WITH REAL FETCH LATER) ===
-            console.log(`[API Interceptor] ${config.method || 'GET'} /api${endpoint}`);
-            return await this.mockNetworkResponse(endpoint, config);
+            console.log(`[Network] ${config.method || 'GET'} ${API_BASE_URL}${endpoint}`);
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-            /* === REAL SPRING BOOT FETCH LOGIC ===
-            const response = await fetch(`/api${endpoint}`, config);
-
+            // If Spring Security rejects the token (expired or invalid)
             if (response.status === 401) {
-                Auth.logout();
-                throw new Error('Unauthorized');
+                localStorage.removeItem('jwt');
+                window.location.href = 'login.html';
+                return null;
             }
 
             if (!response.ok) {
@@ -32,37 +35,22 @@ const API = {
                 throw new Error(errorData.message || `API Error: ${response.status}`);
             }
 
-            // Handle 204 No Content for DELETE
-            if (response.status === 204) return null;
-            return await response.json();
-            ========================================= */
+            // Handle 204 No Content (Used for DELETE requests)
+            if (response.status === 204) {
+                return null;
+            }
+
+            // Return JSON data
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                return await response.json();
+            }
+
+            return null;
 
         } catch (error) {
             console.error('API Request Failed:', error);
             throw error;
         }
-    },
-
-    // Realistic Mock Data Generator
-    mockNetworkResponse(endpoint, config) {
-        return new Promise((resolve) => {
-            setTimeout(() => { // Simulate latency
-                if (endpoint === '/monitors' && (!config.method || config.method === 'GET')) {
-                    resolve([
-                        { id: 1, name: 'Production API', url: 'https://api.myapp.com/v1', interval: 1, status: 'UP', contracts: [{ expected_key: 'status', expected_type: 'STRING' }] },
-                        { id: 2, name: 'Payment Gateway', url: 'https://payments.myapp.com/ping', interval: 5, status: 'DOWN', contracts: [] }
-                    ]);
-                } else if (endpoint.startsWith('/logs/')) {
-                    resolve([
-                        { timestamp: new Date().toISOString(), status: '200 OK', latency: 150 },
-                        { timestamp: new Date(Date.now() - 60000).toISOString(), status: '500 ERROR', latency: 950 },
-                        { timestamp: new Date(Date.now() - 120000).toISOString(), status: '200 OK', latency: 450 }
-                    ]);
-                } else {
-                    // Mocks POST/PUT/DELETE success
-                    resolve({ success: true });
-                }
-            }, 600);
-        });
     }
 };

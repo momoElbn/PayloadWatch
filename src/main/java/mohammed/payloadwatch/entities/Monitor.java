@@ -1,11 +1,13 @@
 package mohammed.payloadwatch.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpMethod;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +31,7 @@ public class Monitor {
             name = "user_id",
             nullable = false
     )
+    @JsonIgnore
     private User user;
 
     @Column(
@@ -62,7 +65,7 @@ public class Monitor {
             name = "is_active",
             nullable = false
     )
-    private boolean isActive;
+    private boolean isActive = true;
 
     @Column(
             name = "current_status",
@@ -76,7 +79,7 @@ public class Monitor {
             updatable = true,
             nullable = false
     )
-    private Instant lastCheckedAt;
+    private Instant lastCheckedAt = Instant.now();
 
     @Column(
             name = "created_at",
@@ -86,7 +89,7 @@ public class Monitor {
     private Instant createdAt = Instant.now();
 
     @OneToMany(mappedBy = "monitor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Contract> contracts;
+    private List<Contract> contracts = new ArrayList<>();
 
     public Monitor() {
     }

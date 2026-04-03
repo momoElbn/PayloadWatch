@@ -1,5 +1,6 @@
 // dashboard.js
 document.addEventListener('DOMContentLoaded', () => {
+
     // DOM Elements
     const tableBody = document.getElementById('monitorTableBody');
     const tableCard = document.getElementById('tableCard');
@@ -10,8 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyModal = document.getElementById('historyModal');
     const deleteModal = document.getElementById('deleteModal');
     const monitorForm = document.getElementById('monitorForm');
+    const contractsContainer = document.getElementById('contractsContainer');
 
-    let monitorToDelete = null; // State for delete modal
+    let monitorToDelete = null;
 
     // --- 1. Dashboard Initialization & Auto-Refresh ---
     loadMonitors();
@@ -27,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         try {
-            const monitors = await API.request('/monitors');
+            // Uses the new API object!
+            const monitors = await API.request('/monitors') || [];
 
             if (monitors.length === 0) {
                 tableCard.style.display = 'none';
@@ -44,9 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderTable(monitors) {
         tableBody.innerHTML = '';
         monitors.forEach(m => {
-            const tr = document.createElement('tr');
             const statusColor = m.status === 'UP' ? 'up' : 'down';
 
+            const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><a href="#" class="btn-link" style="color: var(--primary-green); font-weight:600;" onclick="window.openHistory(${m.id}, '${m.name}')">${m.name}</a></td>
                 <td style="font-family: monospace; color: var(--text-secondary);">
@@ -71,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modalTitle').innerText = 'Create Monitor';
         document.getElementById('monitorMethod').value = 'GET';
 
-        // Clear contracts and add one empty row by default
         contractsContainer.innerHTML = '';
         window.addContractRow();
 
@@ -86,12 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('monitorMethod').value = monitor.httpMethod || 'GET';
         document.getElementById('modalTitle').innerText = 'Edit Monitor';
 
-        // Populate dynamic contract rows
         contractsContainer.innerHTML = '';
         if (monitor.contracts && monitor.contracts.length > 0) {
-            monitor.contracts.forEach(c => window.addContractRow(c.expected_key, c.expected_type));
+            monitor.contracts.forEach(c => window.addContractRow(c.expectedKey, c.expectedType));
         } else {
-            window.addContractRow(); // Fallback empty row
+            window.addContractRow();
         }
 
         monitorModal.classList.add('active');
@@ -109,14 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerText = 'Saving...';
         btn.disabled = true;
 
-        // Scrape the dynamic contract rows
         const contractRows = document.querySelectorAll('.contract-row');
         const contractsArray = [];
         contractRows.forEach(row => {
             const key = row.querySelector('.contract-key').value.trim();
             const type = row.querySelector('.contract-type').value;
             if (key) {
-                contractsArray.push({ expected_key: key, expected_type: type });
+                contractsArray.push({ expectedKey: key, expectedType: type });
             }
         });
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             url: document.getElementById('monitorUrl').value,
             httpMethod: document.getElementById('monitorMethod').value,
             interval: document.getElementById('monitorInterval').value,
-            contracts: contractsArray // Sends clean array to Spring Boot!
+            contracts: contractsArray
         };
 
         try {
@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: id ? 'PUT' : 'POST',
                 body: JSON.stringify(payload)
             });
+
             window.showToast('Monitor saved successfully', 'success');
             window.closeModals();
             loadMonitors();
@@ -165,89 +166,102 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 4. Log History & Latency Colors ---
-    window.openHistory = async (id, name) => {
-        document.getElementById('historyModalTitle').innerText = `Log History: ${name}`;
+    // --- 4. Log History ---
+    function renderHistoryRows(logs = []) {
+        const tbody = document.getElementById('historyTableBody');
+        tbody.innerHTML = '';
 
-        document.getElementById('currentMonitorId').value = id;
+        if (logs.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-secondary);">No logs found for this period.</td></tr>`;
+            return;
+        }
 
-        historyModal.classList.add('active');
+        logs.forEach(log => {
+            const isUp = log.statusCode >= 200 && log.statusCode < 300;
+            const dotClass = isUp ? 'up' : 'down';
 
+            let latencyColor = 'var(--status-up)';
+            if (log.latency > 800) latencyColor = 'var(--status-down)';
+            else if (log.latency >= 200) latencyColor = 'var(--latency-warn)';
+
+            // Include error message if status is down and message exists
+            let errorHtml = '';
+            if (!isUp && log.errorMessage) {
+                // If it's down and we have a message, create a tiny red subtitle
+                errorHtml = `<div style="font-size: 11px; color: var(--status-down); margin-top: 4px; line-height: 1.2;">
+                                ${log.errorMessage}
+                             </div>`;
+            }
+
+            tbody.innerHTML += `
+                <tr>
+                    <td style="color: var(--text-secondary); vertical-align: top; padding-top: 14px;">${log.timestamp}</td>
+                    <td style="vertical-align: top; padding-top: 12px;">
+                        <div><span class="status-dot ${dotClass}"></span>${log.statusCode}</div>
+                        ${errorHtml} </td>
+                    <td style="color: ${latencyColor}; font-family: monospace; font-weight: 600; vertical-align: top; padding-top: 14px;">${log.latency} ms</td>
+                </tr>
+            `;
+        });
+    }
+
+    async function loadHistory(monitorId, range = '24h') {
         const tbody = document.getElementById('historyTableBody');
         tbody.innerHTML = `<tr><td colspan="3"><div class="skeleton"></div></td></tr>`;
 
         try {
-            const logs = await API.request(`/logs/${id}`);
-            tbody.innerHTML = '';
-
-            logs.forEach(log => {
-                const isUp = log.status.includes('200');
-                const dotClass = isUp ? 'up' : 'down';
-
-                // Earthy Latency Coloring
-                let latencyColor = 'var(--status-up)'; // Green < 200
-                if (log.latency > 800) latencyColor = 'var(--status-down)'; // Red > 800
-                else if (log.latency >= 200) latencyColor = 'var(--latency-warn)'; // Amber 200-800
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="color: var(--text-secondary);">${new Date(log.timestamp).toLocaleString()}</td>
-                        <td><span class="status-dot ${dotClass}"></span>${log.status}</td>
-                        <td style="color: ${latencyColor}; font-family: monospace; font-weight: 600;">${log.latency} ms</td>
-                    </tr>
-                `;
-            });
+            const logs = await API.request(`/health-logs/${monitorId}?range=${encodeURIComponent(range)}`) || [];
+            renderHistoryRows(logs);
         } catch (err) {
             tbody.innerHTML = `<tr><td colspan="3" style="color: var(--status-down);">Failed to fetch history</td></tr>`;
         }
+    }
+
+    window.openHistory = async (id, name) => {
+        document.getElementById('historyModalTitle').innerText = `Log History: ${name}`;
+        document.getElementById('currentMonitorId').value = id;
+        historyModal.classList.add('active');
+
+        const activeRangeBtn = document.querySelector('.btn-range.active');
+        const range = activeRangeBtn ? activeRangeBtn.getAttribute('data-range') : '24h';
+        await loadHistory(id, range || '24h');
     };
 
-    // --- 5. UX Polish: Toasts ---
+    // --- 5. UX Polish: Toasts & Time Ranges ---
     window.showToast = (message, type = 'success') => {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.innerText = message;
-
         container.appendChild(toast);
-
-        // Trigger reflow for animation
         toast.offsetHeight;
         toast.classList.add('show');
-
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     };
 
-    // --- 6. Time Range Buttons in History Modal ---
     document.querySelectorAll('.btn-range').forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            // 1. UI Switch
             document.querySelectorAll('.btn-range').forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
 
-            // 2. Fetch new data
-            const range = e.target.getAttribute('data-range');
+            const range = e.target.getAttribute('data-range') || '24h';
             const monitorId = document.getElementById('currentMonitorId').value;
-
-            console.log(`Fetching logs for Monitor ${monitorId} over the last ${range}`);
-            // await API.request(`/logs/${monitorId}?range=${range}`);
-            // updateHistoryTable(newData);
+            if (!monitorId) return;
+            await loadHistory(monitorId, range);
         });
     });
 
-// --- 7. Dynamic Contract Builder Logic ---
-    const contractsContainer = document.getElementById('contractsContainer');
-
+    // --- 6. Dynamic Contract Builder Logic ---
     window.addContractRow = (key = '', type = 'STRING') => {
         const row = document.createElement('div');
         row.className = 'contract-row';
         row.style.cssText = 'display: flex; gap: 10px; align-items: center;';
 
         row.innerHTML = `
-        <input type="text" class="contract-key" placeholder="e.g., database_status" value="${key}" style="flex: 2;" required>
+        <input type="text" class="contract-key" placeholder="e.g., status" value="${key}" style="flex: 2;" required>
         <select class="contract-type" style="flex: 1;">
             <option value="STRING" ${type === 'STRING' ? 'selected' : ''}>String</option>
             <option value="NUMBER" ${type === 'NUMBER' ? 'selected' : ''}>Number</option>
@@ -256,12 +270,20 @@ document.addEventListener('DOMContentLoaded', () => {
             <option value="ARRAY" ${type === 'ARRAY' ? 'selected' : ''}>Array</option>
         </select>
         <button type="button" class="btn btn-danger" style="padding: 10px; line-height: 1;" onclick="this.parentElement.remove()">&times;</button>
-    `;
+        `;
         contractsContainer.appendChild(row);
     };
 
-// Wire up the "+ Add Key" button
     document.getElementById('addContractBtn').addEventListener('click', () => {
         window.addContractRow();
     });
+
+    // --- 7. Logout Flow ---
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('jwt');
+            window.location.href = 'login.html';
+        });
+    }
 });

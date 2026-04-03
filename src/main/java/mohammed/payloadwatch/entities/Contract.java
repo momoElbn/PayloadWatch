@@ -1,5 +1,6 @@
 package mohammed.payloadwatch.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class Contract {
             nullable = false,
             updatable = false
     )
+    @JsonIgnore
     private Monitor monitor;
 
     @Column(
