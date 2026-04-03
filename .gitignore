@@ -33,10 +33,11 @@ build/
 .vscode/
 
 ## Environment Files ###
-.env
+application-local.properties
 .env.local
 .env.*.local
 
 ## Vanilla JS ##
 node_modules/
 dist/
+/application-local.properties
