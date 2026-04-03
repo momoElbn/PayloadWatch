@@ -323,3 +323,25 @@ body.dark-mode .table th {
 }
 
 .text-center { text-align: center; }
+
+/* =========================================
+   12. HTTP Method Badges
+   ========================================= */
+.method-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-right: 8px;
+    font-family: monospace;
+    display: inline-block;
+    min-width: 45px;
+    text-align: center;
+}
+
+/* Color Coding */
+.method-GET { background-color: rgba(16, 185, 129, 0.1); color: #10B981; }
+.method-POST { background-color: rgba(59, 130, 246, 0.1); color: #3B82F6; } /* Blue */
+.method-PUT { background-color: rgba(245, 158, 11, 0.1); color: #F59E0B; } /* Amber */
+.method-DELETE { background-color: rgba(239, 68, 68, 0.1); color: #EF4444; } /* Red */
+.method-PATCH { background-color: rgba(139, 92, 246, 0.1); color: #8B5CF6; } /* Purple */

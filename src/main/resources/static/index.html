@@ -174,8 +174,17 @@
                     <input type="text" id="monitorName" required placeholder="e.g., Auth API">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Target URL</label>
-                    <input type="url" id="monitorUrl" required placeholder="https://api.example.com">
+                    <label class="form-label">Endpoint</label>
+                    <div style="display: flex; gap: 8px;">
+                        <select id="monitorMethod" style="width: 100px; flex-shrink: 0;" required>
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                        <input type="url" id="monitorUrl" style="flex-grow: 1;" required placeholder="https://api.example.com">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Ping Interval (minutes)</label>

@@ -49,7 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             tr.innerHTML = `
                 <td><a href="#" class="btn-link" style="color: var(--primary-green); font-weight:600;" onclick="window.openHistory(${m.id}, '${m.name}')">${m.name}</a></td>
-                <td style="font-family: monospace; color: var(--text-secondary);">${m.url}</td>
+                <td style="font-family: monospace; color: var(--text-secondary);">
+                    <span class="method-badge method-${m.httpMethod || 'GET'}">${m.httpMethod || 'GET'}</span>
+                    ${m.url}
+                </td>
                 <td>${m.interval} min</td>
                 <td><span class="status-dot ${statusColor}"></span>${m.status}</td>
                 <td class="cell-actions">
@@ -66,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         monitorForm.reset();
         document.getElementById('monitorId').value = '';
         document.getElementById('modalTitle').innerText = 'Create Monitor';
+        document.getElementById('monitorMethod').value = 'GET';
 
         // Clear contracts and add one empty row by default
         contractsContainer.innerHTML = '';
@@ -79,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('monitorName').value = monitor.name;
         document.getElementById('monitorUrl').value = monitor.url;
         document.getElementById('monitorInterval').value = monitor.interval;
+        document.getElementById('monitorMethod').value = monitor.httpMethod || 'GET';
         document.getElementById('modalTitle').innerText = 'Edit Monitor';
 
         // Populate dynamic contract rows
@@ -119,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const payload = {
             name: document.getElementById('monitorName').value,
             url: document.getElementById('monitorUrl').value,
+            httpMethod: document.getElementById('monitorMethod').value,
             interval: document.getElementById('monitorInterval').value,
             contracts: contractsArray // Sends clean array to Spring Boot!
         };
