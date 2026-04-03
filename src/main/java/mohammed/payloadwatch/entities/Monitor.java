@@ -64,6 +64,13 @@ public class Monitor {
     private boolean isActive;
 
     @Column(
+            name = "current_status",
+            nullable = true,
+            length = 10
+    )
+    private String currentStatus;
+
+    @Column(
             name = "last_checked_at",
             updatable = true,
             nullable = false

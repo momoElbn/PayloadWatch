@@ -38,7 +38,33 @@ public class User {
     )
     private String email;
 
-    @Getter
+    @Column(
+            name = "email_alerts_enabled",
+            nullable = false
+    )
+    private boolean emailAlertsEnabled = true;
+
+    @Column(
+            name = "plan_tier",
+            nullable = false,
+            length = 20
+    )
+    private String planTier = "free";
+
+    @Column(
+            name = "theme_preference",
+            nullable = false,
+            length = 20
+    )
+    private String themePreference = "light";
+
+    @Column(
+            name = "time_zone_preference",
+            nullable = false,
+            length = 20
+    )
+    private String timeZonePreference = "UTC";
+
     @CreatedDate
     @Column(
             name = "created_at",
