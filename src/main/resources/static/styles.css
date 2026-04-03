@@ -1,0 +1,325 @@
+/* =========================================
+   1. Design Tokens (Earthy Tech Palette)
+   ========================================= */
+:root {
+    /* Backgrounds */
+    --bg-body: #FAFAF9; /* Warm off-white */
+    --bg-panel: #FFFFFF; /* Crisp white for depth */
+    --bg-sidebar: #292524; /* Deep Espresso */
+
+    /* Text */
+    --text-primary: #292524; /* Deep Espresso */
+    --text-secondary: #57534E; /* Warm Gray */
+    --text-muted: #A8A29E;
+    --text-inverse: #FAFAF9;
+
+    /* Accents & Status */
+    --primary-green: #064E3B; /* Forest Green */
+    --primary-green-hover: #065F46;
+    --accent-terra: #9A3412; /* Terracotta */
+    --accent-terra-hover: #7C2D12;
+    --status-up: #65A30D; /* Muted Sage */
+    --status-down: #DC2626; /* Burnt Rust Red */
+    --latency-warn: #D97706; /* Earthy Amber */
+
+    /* UI Elements */
+    --border-color: #E7E5E4;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(41, 37, 36, 0.1);
+}
+
+/* =========================================
+   2. Base & Typography
+   ========================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text-primary); background-color: var(--bg-body); -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+button { border: none; cursor: pointer; font-family: inherit; transition: 0.2s ease; }
+ul { list-style: none; }
+
+/* =========================================
+   3. Layout Structure
+   ========================================= */
+.app-container { display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar { width: 260px; background-color: var(--bg-sidebar); color: var(--text-inverse); display: flex; flex-direction: column; padding: 32px 24px; flex-shrink: 0; }
+.logo { font-size: 20px; font-weight: 700; margin-bottom: 48px; letter-spacing: -0.5px; }
+.nav-link { display: block; padding: 12px 16px; border-radius: 6px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; transition: 0.2s; }
+.nav-link:hover, .nav-link.active { background-color: rgba(250, 250, 249, 0.1); color: var(--text-inverse); }
+.mt-auto { margin-top: auto; }
+
+.main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+.header { background-color: var(--bg-panel); padding: 24px 40px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 24px; font-weight: 600; }
+.container { padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+/* =========================================
+   4. UI Components (Buttons, Forms, Tables)
+   ========================================= */
+.btn { padding: 10px 20px; border-radius: 6px; font-weight: 500; font-size: 14px; }
+.btn-primary { background-color: var(--primary-green); color: var(--bg-panel); }
+.btn-primary:hover:not(:disabled) { background-color: var(--primary-green-hover); }
+.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-secondary { background-color: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-primary); }
+.btn-secondary:hover { background-color: var(--bg-body); }
+.btn-danger { background-color: var(--bg-panel); border: 1px solid #FCA5A5; color: var(--status-down); padding: 6px 12px; }
+.btn-danger:hover { background-color: #FEF2F2; }
+
+.card { background-color: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; }
+
+.table { width: 100%; border-collapse: collapse; text-align: left; }
+.table th { padding: 16px 24px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); background: #F5F5F4; }
+.table td { padding: 16px 24px; border-bottom: 1px solid var(--border-color); }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover { background-color: var(--bg-body); }
+.cell-actions { text-align: right; display: flex; gap: 8px; justify-content: flex-end; }
+
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+.up { background-color: var(--status-up); }
+.down { background-color: var(--status-down); }
+
+input, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; color: var(--text-primary); background-color: var(--bg-body); transition: border-color 0.2s; }
+input:focus, textarea:focus { outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.1); }
+input.error, textarea.error { border-color: var(--status-down); }
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; margin-bottom: 6px; font-weight: 500; }
+.json-error-msg { color: var(--status-down); font-size: 12px; margin-top: 4px; display: none; }
+
+/* =========================================
+   5. Empty State & Skeleton Loaders
+   ========================================= */
+.empty-state { text-align: center; padding: 80px 20px; display: none; }
+.empty-state h2 { font-size: 20px; margin-bottom: 8px; }
+.empty-state p { color: var(--text-secondary); margin-bottom: 24px; }
+.pulse-btn { animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(6, 78, 59, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(6, 78, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(6, 78, 59, 0); } }
+
+.skeleton { background: linear-gradient(90deg, #E7E5E4 25%, #F5F5F4 50%, #E7E5E4 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 20px; border-radius: 4px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* =========================================
+   6. Modals & Toasts
+   ========================================= */
+.modal-overlay { position: fixed; inset: 0; background-color: rgba(41, 37, 36, 0.6); backdrop-filter: blur(2px); display: none; justify-content: center; align-items: center; z-index: 50; opacity: 0; transition: opacity 0.2s; }
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal { background-color: var(--bg-panel); width: 100%; max-width: 500px; border-radius: 12px; box-shadow: var(--shadow-lg); transform: translateY(20px); transition: transform 0.2s; }
+.modal-overlay.active .modal { transform: translateY(0); }
+.modal-wide { max-width: 700px; }
+.modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); background-color: #F5F5F4; display: flex; justify-content: flex-end; gap: 12px; border-radius: 0 0 12px 12px; }
+.close-btn { background: transparent; font-size: 24px; color: var(--text-muted); }
+.close-btn:hover { color: var(--text-primary); }
+
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; flex-direction: column; gap: 10px; }
+.toast { padding: 16px 20px; border-radius: 8px; color: white; font-weight: 500; box-shadow: var(--shadow-lg); transform: translateX(100%); opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.toast.show { transform: translateX(0); opacity: 1; }
+.toast.success { background-color: var(--status-up); }
+.toast.error { background-color: var(--status-down); }
+
+#chart-container { height: 200px; background-color: var(--bg-body); border: 1px dashed var(--border-color); border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+
+/* Filter Chips for History Modal */
+.btn-range {
+    padding: 6px 14px;
+    border-radius: 20px; /* Makes them pill-shaped */
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-panel);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.btn-range:hover {
+    background-color: var(--bg-body);
+    border-color: var(--text-muted);
+}
+
+.btn-range.active {
+    background-color: var(--primary-green);
+    color: var(--bg-panel);
+    border-color: var(--primary-green);
+}
+
+/* =========================================
+   7. Deep Earth Dark Mode
+   ========================================= */
+body.dark-mode {
+    --bg-body: #1C1917; /* Deep Charcoal */
+    --bg-panel: #292524; /* Warm Dark Gray */
+    --text-primary: #F5F5F4; /* Soft Off-white */
+    --text-secondary: #D6D3D1;
+    --text-muted: #78716C;
+    --border-color: #44403C;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+    /* --- NEW: Vibrant Emerald Overrides --- */
+    --primary-green: #10B981; /* Vibrant Emerald Green */
+    --primary-green-hover: #34D399; /* Lighter Emerald for hover state */
+}
+
+/* Perfect contrast for the new bright buttons */
+body.dark-mode .btn-primary {
+    color: #1C1917; /* Deep Charcoal text on bright green */
+    font-weight: 700;
+}
+
+body { transition: background-color 0.3s ease, color 0.3s ease; }
+.card, .modal { transition: background-color 0.3s ease, border-color 0.3s ease; }
+
+/* =========================================
+   8. Settings SPA Layout
+   ========================================= */
+.settings-layout { display: flex; gap: 40px; align-items: flex-start; }
+
+.settings-nav { display: flex; flex-direction: column; width: 220px; flex-shrink: 0; }
+.settings-tab { text-align: left; padding: 12px 16px; background: transparent; color: var(--text-secondary); font-weight: 500; font-size: 14px; border-radius: 6px; margin-bottom: 4px; border: 1px solid transparent; }
+.settings-tab:hover { background-color: rgba(154, 52, 18, 0.05); color: var(--text-primary); }
+.settings-tab.active { background-color: var(--bg-panel); color: var(--primary-green); border-color: var(--border-color); box-shadow: var(--shadow-sm); font-weight: 600; }
+
+/* Brighten the green tab in dark mode so it pops */
+body.dark-mode .settings-tab.active {
+    color: #10B981; /* Vibrant Emerald Green */
+    background-color: var(--bg-body); /* Adds subtle depth */
+}
+
+.settings-content { flex-grow: 1; padding: 32px 40px; min-height: 500px; }
+.settings-pane { display: none; animation: fadeIn 0.3s ease; }
+.settings-pane.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Settings Utilities */
+.pane-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+.pane-subtitle { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.pane-divider { border: 0; border-top: 1px solid var(--border-color); margin-bottom: 24px; }
+.max-w-md { max-width: 400px; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-row { display: flex; align-items: center; }
+.gap-sm { gap: 12px; }
+.mb-0 { margin-bottom: 0 !important; }
+.mb-sm { margin-bottom: 8px; }
+.mb-md { margin-bottom: 16px; }
+.mt-sm { margin-top: 8px; }
+.mt-xl { margin-top: 32px; }
+.text-sm { font-size: 13px; }
+.font-bold { font-weight: 600; }
+.block { display: block; }
+.border-top { border-top: 1px solid var(--border-color); }
+.pt-md { padding-top: 16px; }
+
+/* Read Only / Disabled Inputs */
+.disabled-input { background-color: rgba(0,0,0,0.02); color: var(--text-muted); cursor: not-allowed; }
+body.dark-mode .disabled-input { background-color: rgba(255,255,255,0.02); }
+
+/* API Key Box */
+.api-key-box { border: 1px dashed var(--border-color); border-radius: 6px; padding: 20px; display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-body); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* Plan Badge & Progress Bar */
+.plan-badge { display: inline-block; background-color: rgba(6, 78, 59, 0.1); color: var(--primary-green); padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; border: 1px solid rgba(6, 78, 59, 0.2); }
+body.dark-mode .plan-badge { background-color: rgba(16, 185, 129, 0.1); color: #10B981; border-color: rgba(16, 185, 129, 0.2); }
+
+.progress-container { width: 100%; height: 8px; background-color: var(--border-color); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background-color: var(--primary-green); border-radius: 4px; transition: width 0.5s ease; }
+
+/* Custom CSS Toggle Switch */
+.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); transition: .3s; border-radius: 24px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: var(--bg-panel); transition: .3s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+input:checked + .slider { background-color: var(--primary-green); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* =========================================
+   9. Custom Selectors (Overrides Browser Defaults)
+   ========================================= */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 10px 40px 10px 12px; /* Space for the custom arrow */
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    background-color: var(--bg-body);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    /* Custom SVG Chevron Arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2357534E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: all 0.2s ease;
+}
+
+/* Custom Focus Ring (Removes the default blue) */
+select:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.1);
+}
+
+/* Fix Firefox focus outline issue */
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 var(--text-primary);
+}
+
+/* Dark Mode Select Overrides */
+body.dark-mode select {
+    background-color: var(--bg-panel);
+    color: #F5F5F4; /* Forces bright off-white text so you can actually read it */
+    border-color: var(--border-color);
+    /* Lighter SVG Chevron */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23D6D3D1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+body.dark-mode select:focus {
+    border-color: #10B981; /* Vibrant green border for dark mode */
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* =========================================
+   10. Dark Mode Fixes
+   ========================================= */
+body.dark-mode .table th {
+    /* Replaces the harsh white with a deep charcoal */
+    background-color: #1C1917;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* =========================================
+   11. Authentication Layout (Login Page)
+   ========================================= */
+.auth-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--bg-body);
+}
+
+.auth-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+    animation: fadeIn 0.4s ease;
+}
+
+.auth-card {
+    padding: 40px;
+}
+
+.auth-logo {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.text-center { text-align: center; }
