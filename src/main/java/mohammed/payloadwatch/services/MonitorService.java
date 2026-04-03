@@ -26,12 +26,9 @@ public class MonitorService {
     }
 
     // READ
-    public List<Monitor> getMonitorsByCognitoSub(Long userId) {
-        return monitorRepository.findByUserId(userId);
-    }
 
-    public List<MonitorResponse> getAllMonitorsForUser(Long userId) {
-        List<Monitor> monitors = monitorRepository.findByUserId(userId);
+    public List<MonitorResponse> getAllMonitorsForUser(String cognitoSub) {
+        List<Monitor> monitors = monitorRepository.findByUserCognitoSub(cognitoSub);
         List<MonitorResponse> monitorResponses = new ArrayList<>();
 
         for (Monitor monitor: monitors) {
@@ -89,11 +86,11 @@ public class MonitorService {
 
     // UPDATE
     @Transactional
-    public Monitor updateMonitor(Long userId, Long monitorId, MonitorRequest request) {
-        Monitor monitor = monitorRepository.findByIdAndUserId(monitorId, userId);
+    public Monitor updateMonitor(String cognitoSub, Long monitorId, MonitorRequest request) {
+        Monitor monitor = monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
 
         if (monitor == null) {
-            System.out.println("Monitor not found for id: " + monitorId + " and userId: " + userId);
+            System.out.println("Monitor not found for id: " + monitorId + " and cognitoSub: " + cognitoSub);
             return null;
         }
 
@@ -118,11 +115,11 @@ public class MonitorService {
     }
 
     @Transactional
-    public Monitor updateMonitorStatus(Long monitorId, String status, Long userId) {
-        Monitor monitor = monitorRepository.findByIdAndUserId(monitorId, userId);
+    public Monitor updateMonitorStatus(Long monitorId, String status, String cognitoSub) {
+        Monitor monitor = monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
 
         if (monitor == null) {
-            System.out.println("Monitor not found for id: " + monitorId + " and userId: " + userId);
+            System.out.println("Monitor not found for id: " + monitorId + " and cognitoSub: " + cognitoSub);
             return null;
         }
 
@@ -134,15 +131,14 @@ public class MonitorService {
 
     // DELETE
     @Transactional
-    public boolean deleteMonitor(Long userId, Long monitorId) {
-        Monitor monitor = monitorRepository.findByIdAndUserId(monitorId, userId);
+    public void deleteMonitor(String cognitoSub, Long monitorId) {
+        Monitor monitor = monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
 
         if (monitor == null) {
-            System.out.println("Monitor not found for id: " + monitorId + " and userId: " + userId);
-            return false;
+            System.out.println("Monitor not found for id: " + monitorId + " and cognitoSub: " + cognitoSub);
+            return;
         }
 
         monitorRepository.delete(monitor);
-        return true;
     }
 }

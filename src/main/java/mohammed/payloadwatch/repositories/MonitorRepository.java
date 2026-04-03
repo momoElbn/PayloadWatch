@@ -10,11 +10,13 @@ import java.time.Instant;
 import java.util.Optional;
 
 public interface MonitorRepository extends JpaRepository<Monitor, Long> {
-    // SECURITY: Ensures a user can only fetch, edit, or delete their own monitors
-    Monitor findByIdAndUserId(Long id, Long userid);
+    //Find monitors by the Cognito sub of the user
+    @Query("SELECT m FROM Monitor m WHERE m.user.cognitoSub = :cognitoSub")
+    List<Monitor> findByUserCognitoSub(@Param("cognitoSub") String cognitoSub);
 
-    // Fetches all monitors for a specific user (used in the dashboard)
-    List<Monitor> findByUserId(Long userId);
+    //Find monitors by the Cognito sub of the user and monitor id
+    @Query("SELECT m FROM Monitor m WHERE m.user.cognitoSub = :cognitoSub AND m.id = :monitorId")
+    Monitor findByUserCognitoSubAndMonitorId(@Param("cognitoSub") String cognitoSub, @Param("monitorId") Long monitorId);
 
     // Grabs monitors that are due for a ping
     @Query(
