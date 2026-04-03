@@ -34,6 +34,7 @@ build/
 
 ## Environment Files ###
 application-local.properties
+.env
 .env.local
 .env.*.local
 
