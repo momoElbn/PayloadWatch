@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayloadWatch | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="logo">PayloadWatch.</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" id="navDashboard">Dashboard</a></li>
+                <li><a href="#" class="nav-link" id="navSettings">Settings</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="nav-link mt-auto" id="logoutBtn">Log Out</a>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <h1>Monitors</h1>
+            <button class="btn btn-primary" onclick="window.openMonitorModal()">+ Create Monitor</button>
+        </header>
+
+        <div class="container" id="dashboardView">
+            <div class="empty-state" id="emptyState">
+                <h2>No monitors configured</h2>
+                <p>Start tracking your API endpoints to ensure maximum uptime.</p>
+                <button class="btn btn-primary pulse-btn" onclick="window.openMonitorModal()">+ Create Your First Monitor</button>
+            </div>
+
+            <div class="card" id="tableCard" style="display: none;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Target URL</th>
+                        <th>Interval</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="monitorTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="container" id="settingsView" style="display: none;">
+            <div class="settings-layout">
+
+                <aside class="settings-nav">
+                    <button class="settings-tab active" data-target="pane-appearance">Appearance</button>
+                    <button class="settings-tab" data-target="pane-alerting">Alerting</button>
+                    <button class="settings-tab" data-target="pane-account">Account & Security</button>
+                    <button class="settings-tab" data-target="pane-plan">Plan & Billing</button>
+                </aside>
+
+                <div class="settings-content card">
+
+                    <div class="settings-pane active" id="pane-appearance">
+                        <h3 class="pane-title">Appearance & Preferences</h3>
+                        <hr class="pane-divider">
+
+                        <div class="form-group max-w-md">
+                            <label class="form-label">Interface Theme</label>
+                            <select id="themeSelect">
+                                <option value="light">Light (Earthy Tech)</option>
+                                <option value="dark">Dark (Deep Earth)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group max-w-md">
+                            <label class="form-label">Timezone Display</label>
+                            <select id="timezoneSelect">
+                                <option value="local">Local Browser Time</option>
+                                <option value="utc">UTC (Coordinated Universal Time)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group flex-between">
+                            <div>
+                                <label class="form-label mb-0">24-Hour Clock</label>
+                                <span class="text-muted text-sm">Use military time format (15:00) instead of AM/PM.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="timeFormatToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-pane" id="pane-alerting">
+                        <h3 class="pane-title">Alerting Integrations</h3>
+                        <hr class="pane-divider">
+
+                        <div class="form-group flex-between">
+                            <div>
+                                <label class="form-label mb-0">Email Notifications</label>
+                                <span class="text-muted text-sm">Receive an email immediately when a monitor fails.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="emailAlertToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-pane" id="pane-account">
+                        <h3 class="pane-title">Account & Security</h3>
+                        <hr class="pane-divider">
+
+                        <div class="form-group max-w-md">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" value="mohammed@example.com" disabled class="disabled-input">
+                        </div>
+                        <div class="form-group max-w-md">
+                            <label class="form-label">User ID</label>
+                            <input type="text" value="usr_9x8f7d6c5b4a" disabled class="disabled-input" style="font-family: monospace;">
+                        </div>
+
+                        <h4 class="pane-subtitle mt-xl">Personal Access Tokens</h4>
+                        <p class="text-muted text-sm mb-md">Use these keys to access the PayloadWatch API from your terminal.</p>
+                        <div class="api-key-box">
+                            <span class="text-muted">No active API keys found.</span>
+                            <button class="btn btn-secondary btn-sm" onclick="window.showToast('API Key generation coming soon', 'error')">Generate New Key</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-pane" id="pane-plan">
+                        <h3 class="pane-title">Subscription Plan</h3>
+                        <hr class="pane-divider">
+
+                        <div class="plan-badge">Hobby Plan (Free Tier)</div>
+
+                        <div class="usage-section mt-xl">
+                            <div class="flex-between mb-sm">
+                                <span class="form-label mb-0">Monitors Used</span>
+                                <span class="font-bold">3 / 5</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                            <p class="text-muted text-sm mt-sm">You are using 60% of your free tier monitor limit.</p>
+                        </div>
+
+                        <div class="mt-xl pt-md border-top">
+                            <button class="btn btn-primary" disabled>Upgrade to Pro (Coming Soon)</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<div class="modal-overlay" id="monitorModal">
+    <div class="modal">
+        <header class="modal-header">
+            <h3 id="modalTitle">Create Monitor</h3>
+            <button class="close-btn" onclick="window.closeModals()">&times;</button>
+        </header>
+        <div class="modal-body">
+            <form id="monitorForm">
+                <input type="hidden" id="monitorId">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="monitorName" required placeholder="e.g., Auth API">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Target URL</label>
+                    <input type="url" id="monitorUrl" required placeholder="https://api.example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ping Interval (minutes)</label>
+                    <input type="number" id="monitorInterval" required min="1" value="5">
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label class="form-label mb-0">Expected Contracts</label>
+                        <button type="button" class="btn btn-secondary btn-sm" id="addContractBtn" style="padding: 4px 8px; font-size: 11px;">+ Add Key</button>
+                    </div>
+                    <p class="text-muted text-sm mb-sm">Define the exact keys and data types your API must return to pass the health check.</p>
+
+                    <div id="contractsContainer" style="display: flex; flex-direction: column; gap: 8px;">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <footer class="modal-footer">
+            <button class="btn btn-secondary" onclick="window.closeModals()">Cancel</button>
+            <button type="submit" form="monitorForm" class="btn btn-primary" id="saveMonitorBtn">Save Monitor</button>
+        </footer>
+    </div>
+</div>
+
+<div class="modal-overlay" id="historyModal">
+    <div class="modal modal-wide">
+        <header class="modal-header">
+            <h3 id="historyModalTitle">Log History</h3>
+            <button class="close-btn" onclick="window.closeModals()">&times;</button>
+        </header>
+        <div class="modal-body">
+            <input type="hidden" id="currentMonitorId">
+            <div class="filter-container" style="margin-bottom: 20px; display: flex; gap: 8px;">
+                <span style="font-weight: 600; align-self: center; margin-right: 8px;">View History:</span>
+                <button class="btn-range active" data-range="1h">Last 1h</button>
+                <button class="btn-range" data-range="24h">Last 24h</button>
+                <button class="btn-range" data-range="7d">Last 7d</button>
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Status</th>
+                    <th>Latency</th>
+                </tr>
+                </thead>
+                <tbody id="historyTableBody"></tbody>
+            </table>
+        </div>
+        <footer class="modal-footer">
+            <button class="btn btn-secondary" onclick="window.closeModals()">Close</button>
+        </footer>
+    </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width: 400px;">
+        <header class="modal-header">
+            <h3>Confirm Deletion</h3>
+            <button class="close-btn" onclick="window.closeModals()">&times;</button>
+        </header>
+        <div class="modal-body">
+            <p>Are you sure you want to delete <strong id="deleteMonitorName"></strong>?</p>
+            <p style="color: var(--status-down); margin-top: 10px; font-size: 13px;">All log history will be permanently lost.</p>
+        </div>
+        <footer class="modal-footer">
+            <button class="btn btn-secondary" onclick="window.closeModals()">Cancel</button>
+            <button class="btn btn-primary" style="background-color: var(--accent-terra);" id="confirmDeleteBtn">Yes, Delete</button>
+        </footer>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="auth.js"></script>
+<script src="api.js"></script>
+<script src="dashboard.js"></script>
+<script src="settings.js"></script>
+</body>
+</html>
