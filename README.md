@@ -18,7 +18,7 @@ While traditional monitors only verify `HTTP 200 OK` status codes, PayloadWatch 
 
 PayloadWatch is built on a fully normalized PostgreSQL relational database. The schema separates core user data from the high-volume background logging engine to ensure scalable polling performance.
 
-![PayloadWatch ERD](images/database-diagram-dayloadWatch.png)
+![PayloadWatch ERD](images/final-database-diagram-payloadwatch.png)
 
 **Backend & Core Engine**
 * **Java 21 & Spring Boot 3:** Core REST API and background task scheduling.
