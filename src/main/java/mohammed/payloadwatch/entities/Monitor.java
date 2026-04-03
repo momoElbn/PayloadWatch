@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.http.HttpMethod;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "monitors")
@@ -68,7 +69,7 @@ public class Monitor {
             nullable = true,
             length = 10
     )
-    private String currentStatus;
+    private String currentStatus = "UNKNOWN";
 
     @Column(
             name = "last_checked_at",
@@ -85,27 +86,20 @@ public class Monitor {
     private Instant createdAt = Instant.now();
 
     @OneToMany(mappedBy = "monitor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Contract> contracts;
+    private List<Contract> contracts;
 
     public Monitor() {
     }
 
-    public Monitor(User user, String name, String url, HttpMethod httpMethod, int intervalInMinutes) {
+    public Monitor(User user, String name, String url, String httpMethod, int intervalInMinutes, List<Contract> contracts) {
         this.user = user;
         this.name = name;
         this.url = url;
-        this.httpMethod = httpMethod.name();
+        this.httpMethod = httpMethod;
         this.intervalInMinutes = intervalInMinutes;
         this.isActive = true; // Default to active when created
         this.lastCheckedAt = Instant.now(); // Initialize to current time
-    }
-
-    // Helper method so the rest of your Java code can still use the Spring HttpMethod class
-    public HttpMethod getHttpMethodAsObject() {
-        return HttpMethod.valueOf(this.httpMethod);
-    }
-
-    public void setHttpMethodFromObject(HttpMethod httpMethod) {
-        this.httpMethod = httpMethod.name();
+        this.createdAt = Instant.now();
+        this.contracts = contracts;
     }
 }

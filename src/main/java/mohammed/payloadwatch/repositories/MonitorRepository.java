@@ -11,13 +11,16 @@ import java.util.Optional;
 
 public interface MonitorRepository extends JpaRepository<Monitor, Long> {
     // SECURITY: Ensures a user can only fetch, edit, or delete their own monitors
-    Optional<Monitor> findByIdAndUserId(Long id, Long userId);
+    Monitor findByIdAndUserId(Long id, Long userid);
+
+    // Fetches all monitors for a specific user (used in the dashboard)
+    List<Monitor> findByUserId(Long userId);
 
     // Grabs monitors that are due for a ping
     @Query(
             value = "SELECT * FROM monitors WHERE is_active = true AND last_checked_at + (interval_minutes * interval '1 minute') <= CURRENT_TIMESTAMP",
             nativeQuery = true
     )
-    List<Monitor> findMonitorsDueForPing();
+    List<Monitor> findMonitorsDueForPingAndIsActive();
 
 }

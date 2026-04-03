@@ -13,7 +13,7 @@ public interface HealthLogRepository extends JpaRepository<HealthLog, Long> {
     List<HealthLog> findByMonitorIdAndTimestampAfter(Long monitorId, Instant since);
 
     // Used to show the "Current Status" on the dashboard
-    Optional<HealthLog> findFirstByMonitorIdOrderByTimestampDesc(Long monitorId);
+    HealthLog findFirstByMonitorIdOrderByTimestampDesc(Long monitorId);
 
     // MAINTENANCE: Deletes logs older than a specific date to prevent database bloat
     void deleteByTimestampBefore(Instant cutoffDate);
