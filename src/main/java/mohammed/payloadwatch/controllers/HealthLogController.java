@@ -23,15 +23,15 @@ public class HealthLogController {
     }
 
     @GetMapping("/{monitorId}")
-    public Object getMonitorHistory(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId, @RequestParam String range) {
+    public Object getMonitorHistory(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId, @RequestParam(required = false, defaultValue = "1h") String range) {
 
         User user = userService.getOrCreateUser(jwt);
 
         // Si le frontend n'envoie pas de paramètre de temps, on donne les dernières 24 heures par défaut
-        Instant since = Instant.now().minus(24, ChronoUnit.HOURS);
+        Instant since = Instant.now().minus(1, ChronoUnit.HOURS);
 
-        if ("1h".equals(range)) {
-            since = Instant.now().minus(1, ChronoUnit.HOURS);
+        if ("24h".equals(range)) {
+            since = Instant.now().minus(24, ChronoUnit.HOURS);
         } else if ("7d".equals(range)) {
             since = Instant.now().minus(7, ChronoUnit.DAYS);
         }
