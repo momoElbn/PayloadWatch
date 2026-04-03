@@ -29,7 +29,8 @@ public class HealthLogService {
             responses.add(new HealthLogResponse(
                     log.getTimestamp(),
                     log.getStatusCode(),
-                    log.getLatencyMs()
+                    log.getLatencyMs(),
+                    log.getErrorMessage()
             ));
         }
         return responses;

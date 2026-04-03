@@ -78,10 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. Interactive Toggles (Mock Functionality) ---
     const timezoneSelect = document.getElementById('timezoneSelect');
-    const timeFormatToggle = document.getElementById('timeFormatToggle');
     const emailAlertToggle = document.getElementById('emailAlertToggle');
 
-    [timezoneSelect, timeFormatToggle, emailAlertToggle].forEach(element => {
+    [timezoneSelect, emailAlertToggle].forEach(element => {
         element.addEventListener('change', () => {
             // In a real app, this would hit a PUT /api/user/preferences endpoint
             if (window.showToast) {

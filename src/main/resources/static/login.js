@@ -21,40 +21,61 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 2. Login Flow ---
-    const loginForm = document.getElementById('loginForm');
-    const loginBtn = document.getElementById('loginBtn');
 
     // If already logged in, kick them straight to the dashboard
-    if (Auth.isAuthenticated()) {
+    if (localStorage.getItem('jwt')) {
         window.location.href = 'index.html';
     }
 
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Stop the page from reloading
 
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        loginBtn.innerText = 'Authenticating...';
-        loginBtn.disabled = true;
+        // AWS Configuration
+        const clientId = "276ooik5vjov8ijgjfutv6vn4b";
+        const region = "ca-central-1";
 
         try {
-            // === MOCK COGNITO LOGIN (REPLACE WITH REAL FETCH LATER) ===
-            await new Promise(resolve => setTimeout(resolve, 800)); // Simulate network delay
+            // Make the direct API call to AWS Cognito
+            const response = await fetch(`https://cognito-idp.${region}.amazonaws.com/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-amz-json-1.1',
+                    'X-Amz-Target': 'AWSCognitoIdentityProviderService.InitiateAuth'
+                },
+                body: JSON.stringify({
+                    AuthFlow: "USER_PASSWORD_AUTH",
+                    ClientId: clientId,
+                    AuthParameters: {
+                        "USERNAME": email,
+                        "PASSWORD": password
+                    }
+                })
+            });
 
-            // For MVP testing, any email/password works.
-            // In production, this fetch will hit your Spring Boot /api/auth/login endpoint
-            const mockJwtToken = 'mock-cognito-jwt-' + btoa(email);
+            const data = await response.json();
 
-            // Save token and redirect
-            Auth.setToken(mockJwtToken);
-            window.location.href = 'index.html';
+            if (response.ok && data.AuthenticationResult) {
+                // Success! Grab the IdToken
+                const jwt = data.AuthenticationResult.IdToken;
+
+                // Save it securely in the browser
+                localStorage.setItem('jwt', jwt);
+
+                console.log("Login successful!");
+
+                // Redirect the user to your PayloadWatch dashboard
+                window.location.href = "/index.html";
+            } else {
+                console.error("Login failed:", data.message);
+                alert("Login failed: " + (data.message || "Invalid credentials"));
+            }
 
         } catch (error) {
-            console.error('Login failed:', error);
-            alert('Invalid credentials. Please try again.');
-            loginBtn.innerText = 'Sign In';
-            loginBtn.disabled = false;
+            console.error("Network error during login:", error);
+            alert("Could not connect to the authentication server.");
         }
     });
 });
