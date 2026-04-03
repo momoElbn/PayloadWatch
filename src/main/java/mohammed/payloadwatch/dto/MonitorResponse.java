@@ -6,19 +6,22 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MonitorRequest {
-    // Notice: NO ID and NO STATUS. The frontend should never send these.
+public class MonitorResponse {
+    private Long id;              // Needed so the frontend can edit/delete
     private String name;
     private String url;
     private String httpMethod;
     private int interval;
+    private String status;        // Needed for the UP/DOWN green dot
     private List<ContractDto> contracts;
 
-    public MonitorRequest(String name, String url, String httpMethod, int interval, List<ContractDto> contracts) {
+    public MonitorResponse(Long id, String name, String url, String httpMethod, int interval, String status, List<ContractDto> contracts) {
+        this.id = id;
         this.name = name;
         this.url = url;
         this.httpMethod = httpMethod;
         this.interval = interval;
+        this.status = status;
         this.contracts = contracts;
     }
 }

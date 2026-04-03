@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     //Find a user by their Cognito sub
-    Optional<User> findByCognitoSub(String cognitoSub);
+    User findByCognitoSub(String cognitoSub);
 }

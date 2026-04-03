@@ -46,4 +46,14 @@ public class Contract {
             updatable = false
     )
     private Instant createdAt = Instant.now();
+
+    public Contract() {
+
+    }
+
+    public Contract(Monitor monitor, String expectedKey, String expectedType) {
+        this.monitor = monitor;
+        this.expectedKey = expectedKey;
+        this.expectedType = expectedType;
+    }
 }

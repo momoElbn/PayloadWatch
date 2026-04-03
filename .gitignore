@@ -41,3 +41,4 @@ application-local.properties
 ## Vanilla JS ##
 node_modules/
 dist/
+/application-local.properties
