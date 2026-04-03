@@ -13,10 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         navSettings.classList.remove('active');
         navDashboard.classList.add('active');
-
         settingsView.style.display = 'none';
         dashboardView.style.display = 'block';
-
         headerTitle.innerText = 'Monitors';
         headerCreateBtn.style.display = 'block';
     });
@@ -25,14 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         navDashboard.classList.remove('active');
         navSettings.classList.add('active');
-
         dashboardView.style.display = 'none';
         settingsView.style.display = 'block';
-
         headerTitle.innerText = 'Settings';
-        headerCreateBtn.style.display = 'none'; // Hide "+ Create Monitor" on Settings page
+        headerCreateBtn.style.display = 'none';
     });
-
 
     // --- 2. Settings Sub-Navigation Logic ---
     const settingsTabs = document.querySelectorAll('.settings-tab');
@@ -40,53 +35,113 @@ document.addEventListener('DOMContentLoaded', () => {
 
     settingsTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // Remove active state from all tabs and panes
             settingsTabs.forEach(t => t.classList.remove('active'));
             settingsPanes.forEach(p => p.classList.remove('active'));
-
-            // Add active state to clicked tab and corresponding pane
             tab.classList.add('active');
             const targetId = tab.getAttribute('data-target');
             document.getElementById(targetId).classList.add('active');
         });
     });
 
-
-    // --- 3. Deep Earth Theme Management ---
+    // --- 3. REAL API INTEGRATION: Load Data ---
     const themeSelect = document.getElementById('themeSelect');
+    const timezoneSelect = document.getElementById('timezoneSelect');
+    const emailAlertToggle = document.getElementById('emailAlertToggle'); // Assuming this is a checkbox
 
-    // Check local storage for saved theme preference
-    const savedTheme = localStorage.getItem('payloadwatch_theme') || 'light';
+    async function loadSettings() {
+        try {
+            // Uses your global api.js object!
+            const user = await API.request('/users/me');
 
-    // Apply on initial load
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        themeSelect.value = 'dark';
+            if (user) {
+                // Populate the text fields (Make sure these IDs match your HTML spans/divs!)
+                const emailEl = document.getElementById('settingEmail');
+                const accountIdEl = document.getElementById('settingAccountId');
+                const planEl = document.getElementById('settingPlan');
+                const countEl = document.getElementById('settingMonitorCount');
+
+                if (emailEl) emailEl.value = user.email;
+                if (accountIdEl) accountIdEl.value = user.accountId;
+                if (planEl) planEl.innerText = user.planTier || 'Free Tier';
+                if (countEl) countEl.innerText = user.monitorsTracked;
+
+                if (countEl) countEl.innerText = user.monitorsTracked;
+
+                // --- NEW PROGRESS BAR LOGIC ---
+                const maxMonitors = 5; // The limit for the MVP Free Tier
+                const currentMonitors = user.monitorsTracked || 0;
+
+                // Calculate the percentage (Math.min ensures it doesn't go over 100% visually)
+                const usagePercent = Math.min((currentMonitors / maxMonitors) * 100, 100);
+
+                const progressBar = document.getElementById('settingProgressBar');
+                const progressText = document.getElementById('settingProgressText');
+
+                if (progressBar) {
+                    progressBar.style.width = `${usagePercent}%`;
+                }
+
+                if (progressText) {
+                    progressText.innerText = `You are using ${usagePercent}% of your free tier monitor limit.`;
+                }
+                // ------------------------------
+
+                // Set the toggles to match DB state
+                if (timezoneSelect) timezoneSelect.value = user.timeZonePreference || 'UTC';
+
+                if (themeSelect) {
+                    themeSelect.value = user.themePreference || 'light';
+                    // Apply theme immediately on load based on DB preference
+                    if (themeSelect.value === 'dark') {
+                        document.body.classList.add('dark-mode');
+                        localStorage.setItem('payloadwatch_theme', 'dark');
+                    }
+                }
+                if (emailAlertToggle) emailAlertToggle.checked = user.emailAlertsEnabled;
+            }
+        } catch (error) {
+            console.error("Failed to load user settings:", error);
+        }
     }
 
-    // Listen for dropdown changes
-    themeSelect.addEventListener('change', (e) => {
-        const selectedTheme = e.target.value;
-        if (selectedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('payloadwatch_theme', 'dark');
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('payloadwatch_theme', 'light');
+    // Load everything when page opens
+    loadSettings();
+
+    // --- 4. REAL API INTEGRATION: Save Data ---
+    async function saveSettingsToServer() {
+        const payload = {
+            emailAlertsEnabled: emailAlertToggle ? emailAlertToggle.checked : false,
+            themePreference: themeSelect ? themeSelect.value : 'light',
+            timeZonePreference: timezoneSelect ? timezoneSelect.value : 'UTC'
+        };
+
+        try {
+            await API.request('/users/me/settings', {
+                method: 'PUT',
+                body: JSON.stringify(payload)
+            });
+            if (window.showToast) window.showToast('Preferences saved!', 'success');
+        } catch (error) {
+            if (window.showToast) window.showToast('Error saving preferences', 'error');
         }
-    });
+    }
 
-    // --- 4. Interactive Toggles (Mock Functionality) ---
-    const timezoneSelect = document.getElementById('timezoneSelect');
-    const timeFormatToggle = document.getElementById('timeFormatToggle');
-    const emailAlertToggle = document.getElementById('emailAlertToggle');
+    // Attach listeners to trigger the save function whenever a user changes an input
+    if (timezoneSelect) timezoneSelect.addEventListener('change', saveSettingsToServer);
+    if (emailAlertToggle) emailAlertToggle.addEventListener('change', saveSettingsToServer);
 
-    [timezoneSelect, timeFormatToggle, emailAlertToggle].forEach(element => {
-        element.addEventListener('change', () => {
-            // In a real app, this would hit a PUT /api/user/preferences endpoint
-            if (window.showToast) {
-                window.showToast('Preference saved.', 'success');
+    // Theme needs special logic to update the UI instantly before saving to server
+    if (themeSelect) {
+        themeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'dark') {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('payloadwatch_theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('payloadwatch_theme', 'light');
             }
+            // Save the choice to the database!
+            saveSettingsToServer();
         });
-    });
+    }
 });
