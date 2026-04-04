@@ -3,12 +3,16 @@ services:
     build: . # Tells Docker to look for your Dockerfile in this directory
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
       # These environment variables override your application.properties!
       - SPRING_DATASOURCE_URL=${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=${COGNITO_ISSUER_URI}
+      - AWS_COGNITO_CLIENT_ID=${COGNITO_CLIENT_ID}
+      - AWS_COGNITO_REGION=${AWS_REGION}
     depends_on:
       - db
 
