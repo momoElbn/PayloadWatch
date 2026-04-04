@@ -53,6 +53,10 @@ public class MonitorService {
         return monitorResponses;
     }
 
+    public Monitor getMonitorByIdAndCognitoSub(Long monitorId, String cognitoSub) {
+        return monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
+    }
+
     // CREATE
     @Transactional
     public Monitor createMonitor(String cognitoSub, MonitorRequest request) {
