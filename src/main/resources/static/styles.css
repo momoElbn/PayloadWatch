@@ -344,4 +344,37 @@ body.dark-mode .table th {
 .method-POST { background-color: rgba(59, 130, 246, 0.1); color: #3B82F6; } /* Blue */
 .method-PUT { background-color: rgba(245, 158, 11, 0.1); color: #F59E0B; } /* Amber */
 .method-DELETE { background-color: rgba(239, 68, 68, 0.1); color: #EF4444; } /* Red */
-.method-PATCH { background-color: rgba(139, 92, 246, 0.1); color: #8B5CF6; } /* Purple */
+.method-PATCH { background-color: rgba(139, 92, 246, 0.1); color: #8B5CF6; } /* Purple *//* Activity Toggle Button */
+.btn-activity {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+.btn-activity.active {
+    background-color: rgba(101, 163, 13, 0.1);
+    color: var(--status-up);
+    border-color: rgba(101, 163, 13, 0.2);
+}
+.btn-activity.inactive {
+    background-color: var(--bg-body);
+    color: var(--text-muted);
+    border-color: var(--border-color);
+}
+.btn-activity.active:hover {
+    background-color: rgba(101, 163, 13, 0.2);
+}
+.btn-activity.inactive:hover {
+    background-color: #E7E5E4;
+}
+body.dark-mode .btn-activity.active {
+    background-color: rgba(101, 163, 13, 0.15);
+}
+body.dark-mode .btn-activity.inactive {
+    background-color: var(--bg-sidebar);
+}
+body.dark-mode .btn-activity.inactive:hover {
+    background-color: #3f3f46;
+}
