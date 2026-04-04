@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         // public static files
                         .requestMatchers("/", "/index.html", "/login.html", "/js/**", "/css/**").permitAll()
+                        // health check endpoint
+                        .requestMatchers("/api/health").permitAll()
                         // public api config
                         .requestMatchers("/api/public/**").permitAll()
                         // secure endpoints
