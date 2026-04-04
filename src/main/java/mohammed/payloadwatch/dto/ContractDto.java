@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-// This DTO represents the expected structure of the response for the frontend
+// contract response dto
 public class ContractDto {
     private String expectedKey;
     private String expectedType;

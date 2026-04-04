@@ -19,40 +19,38 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Enable CORS
-                .cors(Customizer.withDefaults())
-
-                // 2. Disable CSRF (Not needed for stateless JWT APIs)
+                // enable cors
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                
+                // disable csrf
                 .csrf(csrf -> csrf.disable())
 
-                // 3. Secure the endpoints
-                .authorizeHttpRequests(auth -> auth
-                        // Allow anyone to load the static HTML/JS/CSS frontend files
+                // configure endpoints
+                .authorizeHttpRequests(authz -> authz
+                        // public static files
                         .requestMatchers("/", "/index.html", "/login.html", "/js/**", "/css/**").permitAll()
-                        // Require a valid Cognito JWT for anything under /api/
+                        // secure endpoints
                         .requestMatchers("/api/**").authenticated()
-                        // Allow everything else
+                        // default policy
                         .anyRequest().permitAll()
                 )
 
-                // 4. Tell Spring to act as an OAuth2 Resource Server and expect JWTs
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(Customizer.withDefaults())
-                );
+                // parse jwt
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
         return http.build();
     }
 
-    // CORS Configuration: Allows your frontend to talk to your API endpoints
+    // configure cors
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        // Allow common local development ports
+        
+        // local dev patterns
         configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-
+        configuration.setAllowedHeaders(List.of("*"));
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -23,13 +23,13 @@ public class UserController {
 
     @GetMapping
     public UserSettingsResponse getMySettings(@AuthenticationPrincipal Jwt jwt) {
-        // 1. Get the user (JIT provisioning ensures they exist)
+        // fetch user
         User user = userService.getOrCreateUser(jwt);
 
-        // 2. Count their monitors
+        // get monitor count
         long monitorCount = monitorService.getAllMonitorsForUser(user.getCognitoSub()).size();
 
-        // 3. Send back the packaged DTO
+        // return user stats
         return new UserSettingsResponse(
                 user.getCognitoSub(),
                 user.getEmail(),
@@ -45,7 +45,7 @@ public class UserController {
     public void updateMySettings(@AuthenticationPrincipal Jwt jwt, @RequestBody UserSettingsUpdateRequest request) {
         User user = userService.getOrCreateUser(jwt);
 
-        // This uses the exact method we built in your UserService earlier!
+        // apply settings update
         userService.updateUserSettings(
                 user.getCognitoSub(),
                 request.emailAlertsEnabled(),

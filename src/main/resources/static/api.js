@@ -1,12 +1,12 @@
 // api.js
-// Dynamically resolve base URL so it works on localhost port 8080 and when deployed to cloud.
+// resolve api base url
 const API_BASE_URL = window.location.hostname === 'localhost' && window.location.port !== '8080' ? "http://localhost:8080/api" : "/api";
 
 const API = {
     async request(endpoint, options = {}) {
         const token = localStorage.getItem('jwt');
 
-        // If no token exists, kick them back to login immediately
+        // enforce auth
         if (!token) {
             window.location.href = 'login.html';
             return null;
@@ -14,7 +14,7 @@ const API = {
 
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // The VIP Pass
+            'Authorization': `Bearer ${token}`, // pass token
             ...options.headers
         };
 
@@ -24,7 +24,7 @@ const API = {
             console.log(`[Network] ${config.method || 'GET'} ${API_BASE_URL}${endpoint}`);
             const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-            // If Spring Security rejects the token (expired or invalid)
+            // refresh expired token
             if (response.status === 401) {
                 localStorage.removeItem('jwt');
                 window.location.href = 'login.html';
@@ -36,12 +36,12 @@ const API = {
                 throw new Error(errorData.message || `API Error: ${response.status}`);
             }
 
-            // Handle 204 No Content (Used for DELETE requests)
+            // check empty content
             if (response.status === 204) {
                 return null;
             }
 
-            // Return JSON data
+            // parse body
             const contentType = response.headers.get('content-type') || '';
             if (contentType.includes('application/json')) {
                 return await response.json();

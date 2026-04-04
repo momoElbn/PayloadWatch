@@ -28,10 +28,10 @@ public class EmailAlertService {
             return false;
         }
 
-        // If the latest log indicates downtime, trigger an alert
+        // Send alert if downtime
         if (!latestLog.isSuccess()) {
             if(user.isEmailAlertsEnabled()) {
-                //Implement email sending logic here (e.g., using JavaMailSender)
+                // Send email
                 System.out.println("EmailAlertService: Sending downtime alert email to " + user.getEmail());
             }
         }

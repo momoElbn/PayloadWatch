@@ -12,7 +12,7 @@ const Auth = {
 
     logout() {
         localStorage.removeItem(this.TOKEN_KEY);
-        // Redirect to the new login page!
+        // logout and redirect
         window.location.href = 'login.html';
     },
 
@@ -21,17 +21,16 @@ const Auth = {
     }
 };
 
-// Global Route Guard: Protect the dashboard
-// If a user loads index.html without a token, instantly kick them to login
+// route guard
 document.addEventListener('DOMContentLoaded', () => {
-    // Only run the route guard if we are NOT on the login page
+    // enforce auth on protected pages
     if (!window.location.pathname.includes('login.html')) {
         if (!Auth.isAuthenticated()) {
             window.location.replace('login.html');
         }
     }
 
-    // Wire up the sidebar Log Out button (if it exists on the page)
+    // handle logout
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {

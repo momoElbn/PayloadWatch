@@ -27,7 +27,7 @@ public class HealthLogController {
 
         User user = userService.getOrCreateUser(jwt);
 
-        // Si le frontend n'envoie pas de paramètre de temps, on donne les dernières 24 heures par défaut
+        // dafault to last 1 hour
         Instant since = Instant.now().minus(1, ChronoUnit.HOURS);
 
         if ("24h".equals(range)) {

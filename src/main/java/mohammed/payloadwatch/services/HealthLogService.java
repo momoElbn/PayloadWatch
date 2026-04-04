@@ -18,12 +18,12 @@ public class HealthLogService {
         this.healthLogRepository = healthLogRepository;
     }
 
-    // Add this to your MonitorService (or a new HealthLogService)
+    // Get monitor history
     public List<HealthLogResponse> getMonitorHistory(Long monitorId, Instant since) {
-        // 1. Fetch the top 50 most recent logs from the repository
+        // Fetch recent logs
         List<HealthLog> logs = healthLogRepository.findByMonitorIdAndTimestampAfter(monitorId, since);
 
-        // 2. Map them to your DTO
+        // Map logs to DTOs for frontend
         List<HealthLogResponse> responses = new ArrayList<>();
         for (HealthLog log : logs) {
             responses.add(new HealthLogResponse(
