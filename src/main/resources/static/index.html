@@ -80,14 +80,17 @@
                         <h3 class="pane-title">Alerting Integrations</h3>
                         <hr class="pane-divider">
 
-                        <div class="form-group flex-between">
+                        <div class="form-group flex-between" style="opacity: 0.5; pointer-events: none; position: relative;">
                             <div>
-                                <label class="form-label mb-0">Email Notifications</label>
+                                <label class="form-label mb-0" style="display: flex; align-items: center; gap: 8px;">
+                                    Email Notifications
+                                    <span class="plan-badge" style="font-size: 11px; padding: 2px 8px; background-color: var(--latency-warn); color: white; border: none;">Coming Soon</span>
+                                </label>
                                 <span class="text-muted text-sm">Receive an email immediately when a monitor fails.</span>
                             </div>
                             <label class="toggle-switch">
-                                <input type="checkbox" id="emailAlertToggle" checked>
-                                <span class="slider"></span>
+                                <input type="checkbox" id="emailAlertToggle" disabled>
+                                <span class="slider" style="background-color: var(--border-color);"></span>
                             </label>
                         </div>
                     </div>
@@ -124,7 +127,7 @@
                         </div>
 
                         <div class="mt-xl pt-md border-top">
-                            <button class="btn btn-primary" disabled>Upgrade to Pro (Coming Soon)</button>
+                            <button class="btn btn-primary" disabled style="background-color: var(--latency-warn); opacity: 0.8;">Upgrade to Pro (Coming Soon)</button>
                         </div>
                     </div>
 
@@ -240,3 +243,4 @@
 <script src="settings.js"></script>
 </body>
 </html>
+
