@@ -73,12 +73,17 @@ public class MonitorService {
         int currentMonitorCount = getAllMonitorsForUser(cognitoSub).size();
 
         // Enforce monitor limits
-        int maxMonitors = "PRO".equalsIgnoreCase(user.getPlanTier()) ? 50 : 5;
+        boolean isPro = "PRO".equalsIgnoreCase(user.getPlanTier());
+        int maxMonitors = isPro ? 50 : 5;
 
         if (currentMonitorCount >= maxMonitors) {
+            String errorMessage = isPro
+                ? "You have reached your monitor limit (" + maxMonitors + ")."
+                : "You have reached your monitor limit (" + maxMonitors + "). Please upgrade your plan for more monitors.";
+
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
-                    "You have reached your monitor limit (" + maxMonitors + "). Please upgrade your plan."
+                    errorMessage
             );
         }
 

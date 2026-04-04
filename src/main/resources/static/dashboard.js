@@ -17,16 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // init dashboard
     loadMonitors();
-    setInterval(loadMonitors, 60000); // 60s Heartbeat
+    setInterval(() => loadMonitors(true), 30000); // Silent 30s Heartbeat
 
-    async function loadMonitors() {
-        // Render Skeleton Loader
-        tableCard.style.display = 'block';
-        emptyState.style.display = 'none';
-        tableBody.innerHTML = `
-            <tr><td colspan="6"><div class="skeleton"></div></td></tr>
-            <tr><td colspan="6"><div class="skeleton" style="width: 80%"></div></td></tr>
-        `;
+    async function loadMonitors(isSilent = false) {
+        // Render Skeleton Loader only if it is not a silent background refresh
+        if (!isSilent) {
+            tableCard.style.display = 'block';
+            emptyState.style.display = 'none';
+            tableBody.innerHTML = `
+                <tr><td colspan="6"><div class="skeleton"></div></td></tr>
+                <tr><td colspan="6"><div class="skeleton" style="width: 80%"></div></td></tr>
+            `;
+        }
 
         try {
             // Uses the new API object!
@@ -36,11 +38,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableCard.style.display = 'none';
                 emptyState.style.display = 'block';
             } else {
+                tableCard.style.display = 'block';
+                emptyState.style.display = 'none';
                 renderTable(monitors);
             }
         } catch (error) {
-            window.showToast('Failed to load monitors', 'error');
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--status-down);">Failed to load data.</td></tr>`;
+            if (!isSilent) {
+                window.showToast('Failed to load monitors', 'error');
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--status-down);">Failed to load data.</td></tr>`;
+            } else {
+                console.error("Background monitor refresh failed", error);
+            }
         }
     }
 
@@ -197,8 +205,13 @@ document.addEventListener('DOMContentLoaded', () => {
             window.showToast('Monitor saved successfully', 'success');
             window.closeModals();
             loadMonitors();
+
+            // Refresh settings immediately to update plan & billing limits
+            if (typeof window.loadSettings === 'function') {
+                window.loadSettings();
+            }
         } catch (err) {
-            window.showToast('Error saving monitor', 'error');
+            window.showToast(err.message || 'Error saving monitor', 'error');
         } finally {
             btn.innerText = originalText;
             btn.disabled = false;
@@ -220,6 +233,11 @@ document.addEventListener('DOMContentLoaded', () => {
             window.showToast('Monitor deleted', 'success');
             window.closeModals();
             loadMonitors();
+
+            // Refresh settings immediately to update plan & billing limits
+            if (typeof window.loadSettings === 'function') {
+                window.loadSettings();
+            }
         } catch (err) {
             window.showToast('Failed to delete monitor', 'error');
         }

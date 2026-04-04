@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const timezoneSelect = document.getElementById('timezoneSelect');
     const emailAlertToggle = document.getElementById('emailAlertToggle'); // Assuming this is a checkbox
 
-    async function loadSettings() {
+    window.loadSettings = async function() {
         try {
             // Uses your global api.js object!
             const user = await API.request('/users/me');
@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (planEl) planEl.innerText = user.planTier || 'Free Tier';
                 if (countEl) countEl.innerText = user.monitorsTracked;
 
-                if (countEl) countEl.innerText = user.monitorsTracked;
-
                 // --- NEW PROGRESS BAR LOGIC ---
-                const maxMonitors = 5; // The limit for the MVP Free Tier
+                const planString = (user.planTier || '').toLowerCase();
+                const isPro = planString.includes('pro');
+                const maxMonitors = isPro ? 50 : 5; // The limit for the MVP Free Tier and Pro Tier
                 const currentMonitors = user.monitorsTracked || 0;
 
                 // Calculate the percentage (Math.min ensures it doesn't go over 100% visually)
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (progressText) {
-                    progressText.innerText = `You are using ${usagePercent}% of your free tier monitor limit.`;
+                    progressText.innerText = `You are using ${usagePercent.toFixed(0)}% of your monitor limit (${currentMonitors}/${maxMonitors}).`;
                 }
                 // ------------------------------
 
@@ -102,10 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("Failed to load user settings:", error);
         }
-    }
+    };
 
     // Load everything when page opens
-    loadSettings();
+    window.loadSettings();
 
     // setup section
     async function saveSettingsToServer() {
