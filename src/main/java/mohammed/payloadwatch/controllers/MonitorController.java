@@ -53,6 +53,13 @@ public class MonitorController {
         monitorService.deleteMonitor(user.getCognitoSub(), monitorId);
     }
 
+    @GetMapping("/{monitorId}/activity")
+    public boolean getMonitorActivity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId) {
+        User user = userService.getOrCreateUser(jwt);
+
+        return monitorService.getMonitorByIdAndCognitoSub(monitorId, user.getCognitoSub()).isActive();
+    }
+
     @PatchMapping("/{monitorId}/activity")
     public Monitor updateMonitorActivity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId, @RequestParam Boolean isActive) {
         User user = userService.getOrCreateUser(jwt);
