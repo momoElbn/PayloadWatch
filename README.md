@@ -1,7 +1,7 @@
 # PayloadWatch 🛡️
 
 ![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.0-6DB33F?style=for-the-badge&logo=spring-boot)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?style=for-the-badge&logo=spring-boot)
 ![AWS](https://img.shields.io/badge/AWS-Cloud_Native-232F3E?style=for-the-badge&logo=amazon-aws)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Ready-336791?style=for-the-badge&logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)
@@ -17,7 +17,7 @@ While traditional monitors only verify `HTTP 200 OK` status codes, PayloadWatch 
 * **JSON Contract Validation:** Goes beyond basic pinging by actively parsing response payloads via Jackson to ensure required data keys and types are present.
 * **Autonomous Polling Engine:** A multithreaded `@Scheduled` Spring Boot worker that manages its own execution cycles and database querying without blocking main threads.
 * **Stateless Security:** Secures all REST endpoints utilizing AWS Cognito for JWT-based identity management and route protection.
-* **Lightweight Dashboard:** A blazing-fast, framework-free Vanilla JavaScript (Vite) Single Page Application (SPA) for managing monitors and viewing health metrics.
+* **Lightweight Dashboard:** A blazing-fast, framework-free Vanilla JavaScript Single Page Application (SPA) for managing monitors and viewing health metrics.
 
 ---
 
@@ -59,7 +59,7 @@ You can spin up the entire PayloadWatch backend and database in seconds using Do
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/momoElbn/PayloadWatch.git](https://github.com/momoElbn/PayloadWatch.git)
+git clone https://github.com/momoElbn/PayloadWatch.git
 cd PayloadWatch
 ```
 
@@ -73,7 +73,7 @@ DB_USERNAME=your_db_user
 DB_PASSWORD=your_db_password
 
 # AWS Cognito Configuration
-COGNITO_ISSUER_URI=[https://cognito-idp.ca-central-1.amazonaws.com/your_pool_id](https://cognito-idp.ca-central-1.amazonaws.com/your_pool_id)
+COGNITO_ISSUER_URI=https://cognito-idp.ca-central-1.amazonaws.com/your_pool_id
 COGNITO_CLIENT_ID=your_app_client_id
 
 # AWS Configuration (For general clients)

@@ -10,21 +10,24 @@
     </parent>
     <groupId>mohammed</groupId>
     <artifactId>PayloadWatch</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>PayloadWatch</name>
     <description>PayloadWatch</description>
-    <url/>
+    <url>https://github.com/momoElbn/PayloadWatch</url>
     <licenses>
-        <license/>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit/</url>
+        </license>
     </licenses>
     <developers>
         <developer/>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <connection>scm:git:https://github.com/momoElbn/PayloadWatch.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/momoElbn/PayloadWatch.git</developerConnection>
+        <tag>v1.0.0</tag>
+        <url>https://github.com/momoElbn/PayloadWatch</url>
     </scm>
     <properties>
         <java.version>21</java.version>
