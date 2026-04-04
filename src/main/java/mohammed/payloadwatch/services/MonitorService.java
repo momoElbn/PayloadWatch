@@ -130,7 +130,7 @@ public class MonitorService {
     }
 
     @Transactional
-    public Monitor updateMonitorStatus(Long monitorId, String status, String cognitoSub) {
+    public Monitor updateMonitorActivity(Long monitorId, String cognitoSub, Boolean isActive) {
         Monitor monitor = monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
 
         if (monitor == null) {
@@ -138,8 +138,7 @@ public class MonitorService {
             return null;
         }
 
-        monitor.setCurrentStatus(status);
-        monitor.setLastCheckedAt(java.time.Instant.now());
+        monitor.setActive(isActive);
 
         return monitorRepository.save(monitor);
     }

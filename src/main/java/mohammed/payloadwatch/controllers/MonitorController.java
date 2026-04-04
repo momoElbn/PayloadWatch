@@ -52,4 +52,11 @@ public class MonitorController {
 
         monitorService.deleteMonitor(user.getCognitoSub(), monitorId);
     }
+
+    @PatchMapping("/{monitorId}/activity")
+    public Monitor updateMonitorActivity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId, @RequestParam Boolean isActive) {
+        User user = userService.getOrCreateUser(jwt);
+
+        return monitorService.updateMonitorActivity(monitorId, user.getCognitoSub(), isActive);
+    }
 }
