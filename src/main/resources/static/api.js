@@ -1,5 +1,6 @@
 // api.js
-const API_BASE_URL = "http://localhost:8080/api";
+// Dynamically resolve base URL so it works on localhost port 8080 and when deployed to cloud.
+const API_BASE_URL = window.location.hostname === 'localhost' && window.location.port !== '8080' ? "http://localhost:8080/api" : "/api";
 
 const API = {
     async request(endpoint, options = {}) {

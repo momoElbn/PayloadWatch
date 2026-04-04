@@ -378,3 +378,43 @@ body.dark-mode .btn-activity.inactive {
 body.dark-mode .btn-activity.inactive:hover {
     background-color: #3f3f46;
 }
+
+/* =========================================
+   13. Responsive Design (Mobile / Tablet)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Layout Switch */
+    .app-container { flex-direction: column; height: 100vh; overflow-y: auto; }
+    .sidebar { width: 100%; padding: 16px; flex-direction: row; flex-wrap: wrap; height: auto; }
+    .logo { margin-bottom: 0; margin-right: auto; flex: 1; }
+    .sidebar nav { width: 100%; margin-top: 12px; order: 3; }
+    .sidebar nav ul { display: flex; gap: 8px; justify-content: space-around; overflow-x: auto; padding-bottom: 4px; }
+    .nav-link { margin-bottom: 0; white-space: nowrap; text-align: center; font-size: 13px; }
+    #logoutBtn { margin-top: auto; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.2); }
+
+    /* Content Switch */
+    .main-content { overflow-y: visible; flex: none; height: auto; min-height: 100%; }
+    .header { padding: 20px 16px; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 20px; }
+
+    /* Containers & Spacing */
+    .container { padding: 16px; }
+
+    /* Responsive Data Tables */
+    .card { overflow-x: auto; }
+    .table { width: 100%; min-width: 700px; /* Force scroll on small screens rather than squishing data */ }
+
+    /* Modal Adjustment */
+    .modal { width: 95%; max-width: none; margin: 20px auto; }
+    .modal-body { padding: 16px; }
+
+    /* Settings Layout */
+    .settings-layout { flex-direction: column; }
+    .settings-nav { width: 100%; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 16px; gap: 8px; }
+    .settings-tab { flex: 0 0 auto; text-align: center; }
+    .settings-content { padding: 16px; }
+
+    /* Settings Form Wraps */
+    .form-group.flex-between { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .form-group.flex-between .toggle-switch { align-self: flex-start; }
+}
