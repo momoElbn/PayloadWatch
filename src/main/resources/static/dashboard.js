@@ -82,10 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const newStatus = !currentStatus;
             
-            // Update endpoint to send 'isActive'
-            await API.request(`/monitors/${id}/activity`, {
-                method: 'PATCH',
-                body: JSON.stringify({ isActive: newStatus })
+            // Append isActive as a query parameter to match @RequestParam
+            await API.request(`/monitors/${id}/activity?isActive=${newStatus}`, {
+                method: 'PATCH'
             });
 
             window.showToast(`Monitor ${newStatus ? 'activated' : 'deactivated'}`, 'success');
