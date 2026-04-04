@@ -9,7 +9,9 @@ import mohammed.payloadwatch.entities.Monitor;
 import mohammed.payloadwatch.entities.User;
 import mohammed.payloadwatch.repositories.MonitorRepository;
 import mohammed.payloadwatch.repositories.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,19 @@ public class MonitorService {
         if (user == null) {
             System.out.println("User not found for cognitoSub: " + cognitoSub);
             return null;
+        }
+
+        // 1. Check how many monitors they currently have
+        int currentMonitorCount = getAllMonitorsForUser(cognitoSub).size();
+
+        // 2. Enforce the limit based on their plan (Defaulting to 5 for Free Tier)
+        int maxMonitors = "PRO".equalsIgnoreCase(user.getPlanTier()) ? 50 : 5;
+
+        if (currentMonitorCount >= maxMonitors) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "You have reached your monitor limit (" + maxMonitors + "). Please upgrade your plan."
+            );
         }
 
         Monitor monitor = new Monitor();
