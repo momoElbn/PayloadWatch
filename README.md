@@ -15,7 +15,7 @@ While traditional monitors only verify `HTTP 200 OK` status codes, PayloadWatch 
 ## ✨ Key Features
 
 * **JSON Contract Validation:** Goes beyond basic pinging by actively parsing response payloads via Jackson to ensure required data keys and types are present.
-* **Autonomous Polling Engine:** A multithreaded `@Scheduled` Spring Boot worker that manages its own execution cycles and database querying without blocking main threads.
+* **Autonomous Polling Engine:** A `@Scheduled` Spring Boot worker that manages its own execution cycles and database querying without blocking main threads.
 * **Stateless Security:** Secures all REST endpoints utilizing AWS Cognito for JWT-based identity management and route protection.
 * **Lightweight Dashboard:** A blazing-fast, framework-free Vanilla JavaScript Single Page Application (SPA) for managing monitors and viewing health metrics.
 
