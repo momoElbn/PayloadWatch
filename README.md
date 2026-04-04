@@ -88,6 +88,13 @@ docker-compose up -d --build
 ### 4. Access the application
 ``http://localhost:8080``
 
+### 💡 Pro-Tip: Monitoring Local APIs
+If you are running an API locally on your machine (e.g., on port 5000) and want PayloadWatch to monitor it, do not use localhost in the monitor URL. Since PayloadWatch is running inside a container, localhost refers to the container itself.
+
+Instead, use the Docker bridge address:
+
+Target URL: `http://host.docker.internal:5000/api/your-endpoint`
+
 ### 5. Stop the application
 ```bash
 docker-compose down
