@@ -105,11 +105,11 @@
 
                         <div class="form-group max-w-md">
                             <label class="form-label">Email Address</label>
-                            <input type="email" value="mohammed@example.com" disabled class="disabled-input">
+                            <input type="email" id="settingEmail" value="" disabled class="disabled-input">
                         </div>
                         <div class="form-group max-w-md">
-                            <label class="form-label">User ID</label>
-                            <input type="text" value="usr_9x8f7d6c5b4a" disabled class="disabled-input" style="font-family: monospace;">
+                            <label class="form-label">Cognito ID</label>
+                            <input type="text" id="settingAccountId" value="" disabled class="disabled-input" style="font-family: monospace;">
                         </div>
 
                         <h4 class="pane-subtitle mt-xl">Personal Access Tokens</h4>
@@ -124,17 +124,17 @@
                         <h3 class="pane-title">Subscription Plan</h3>
                         <hr class="pane-divider">
 
-                        <div class="plan-badge">Hobby Plan (Free Tier)</div>
+                        <div class="plan-badge" id="settingPlan">Hobby Plan (Free Tier)</div>
 
                         <div class="usage-section mt-xl">
                             <div class="flex-between mb-sm">
                                 <span class="form-label mb-0">Monitors Used</span>
-                                <span class="font-bold">3 / 5</span>
+                                <span class="font-bold"><span id="settingMonitorCount">0</span> / 5</span>
                             </div>
                             <div class="progress-container">
-                                <div class="progress-fill" style="width: 60%;"></div>
+                                <div class="progress-fill" id="settingProgressBar" style="width: 0%;"></div>
                             </div>
-                            <p class="text-muted text-sm mt-sm">You are using 60% of your free tier monitor limit.</p>
+                            <p class="text-muted text-sm mt-sm" id="settingProgressText">You are using 0% of your free tier monitor limit.</p>
                         </div>
 
                         <div class="mt-xl pt-md border-top">

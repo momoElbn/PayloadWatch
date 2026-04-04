@@ -31,7 +31,7 @@ public class UserService {
     }
 
     @Transactional
-    void updateUserSettings(String cognitoSub, boolean emailAlertsEnabled, String themePreference, String timezonePreference) {
+    public void updateUserSettings(String cognitoSub, boolean emailAlertsEnabled, String themePreference, String timezonePreference) {
         try {
             User user = userRepository.findByCognitoSub(cognitoSub);
             if (user != null) {
