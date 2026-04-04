@@ -24,14 +24,22 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDiv.style.display = 'none';
 
         try {
-            const response = await fetch(`https://cognito-idp.ca-central-1.amazonaws.com/`, {
+            // fetch config from backend
+            const configResponse = await fetch('/api/public/config');
+            if (!configResponse.ok) throw new Error('Failed to load configuration');
+            const config = await configResponse.json();
+
+            const clientId = config.cognitoClientId;
+            const region = config.cognitoRegion;
+
+            const response = await fetch(`https://cognito-idp.${region}.amazonaws.com/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-amz-json-1.1',
                     'X-Amz-Target': 'AWSCognitoIdentityProviderService.ConfirmSignUp'
                 },
                 body: JSON.stringify({
-                    ClientId: "276ooik5vjov8ijgjfutv6vn4b",
+                    ClientId: clientId,
                     Username: email,
                     ConfirmationCode: code
                 })

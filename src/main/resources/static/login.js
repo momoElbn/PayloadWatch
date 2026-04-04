@@ -33,11 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        // aws config
-        const clientId = "276ooik5vjov8ijgjfutv6vn4b";
-        const region = "ca-central-1";
-
         try {
+            // fetch config from backend
+            const configResponse = await fetch('/api/public/config');
+            if (!configResponse.ok) throw new Error('Failed to load configuration');
+            const config = await configResponse.json();
+
+            const clientId = config.cognitoClientId;
+            const region = config.cognitoRegion;
+
             // call cognito
             const response = await fetch(`https://cognito-idp.${region}.amazonaws.com/`, {
                 method: 'POST',
