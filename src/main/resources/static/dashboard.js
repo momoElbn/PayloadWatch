@@ -81,6 +81,14 @@ document.addEventListener('DOMContentLoaded', () => {
     window.toggleActivity = async (id, currentStatus) => {
         try {
             const newStatus = !currentStatus;
+
+            // Optimistically update the UI button immediately
+            const btn = document.querySelector(`button[onclick="window.toggleActivity(${id}, ${currentStatus})"]`);
+            if (btn) {
+                btn.className = `btn btn-activity ${newStatus ? 'active' : 'inactive'}`;
+                btn.innerText = newStatus ? 'Active' : 'Inactive';
+                btn.setAttribute('onclick', `window.toggleActivity(${id}, ${newStatus})`);
+            }
             
             // Append isActive as a query parameter to match @RequestParam
             await API.request(`/monitors/${id}/activity?isActive=${newStatus}`, {
@@ -88,8 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             window.showToast(`Monitor ${newStatus ? 'activated' : 'deactivated'}`, 'success');
-            loadMonitors(); // Refresh the table
+            // Remove loadMonitors() to stop it from overwriting the UI with stale backend state
         } catch (err) {
+            // Revert on error
+            const btn = document.querySelector(`button[onclick="window.toggleActivity(${id}, ${!currentStatus})"]`);
+            if (btn) {
+                btn.className = `btn btn-activity ${currentStatus ? 'active' : 'inactive'}`;
+                btn.innerText = currentStatus ? 'Active' : 'Inactive';
+                btn.setAttribute('onclick', `window.toggleActivity(${id}, ${currentStatus})`);
+            }
             window.showToast('Failed to change monitor activity', 'error');
         }
     };
