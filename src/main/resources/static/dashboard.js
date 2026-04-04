@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${m.interval} min</td>
                 <td><span class="status-dot ${statusColor}"></span>${m.status}</td>
                 <td>
-                    <button class="btn btn-activity ${activityClass}" onclick="window.toggleActivity(${m.id}, ${isActive})">
-                        ${activityText}
+                    <button id="activity-btn-${m.id}" class="btn btn-activity ${activityClass}" onclick="window.toggleActivity(${m.id}, true)">
+                        Loading...
                     </button>
                 </td>
                 <td class="cell-actions">
@@ -74,7 +74,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
             `;
             tableBody.appendChild(tr);
+
+            // Fetch the actual activity status from the backend
+            fetchActivityStatus(m.id);
         });
+    }
+
+    async function fetchActivityStatus(id) {
+        try {
+            const isActive = await API.request(`/monitors/${id}/activity`);
+            const btn = document.getElementById(`activity-btn-${id}`);
+            if (btn) {
+                btn.className = `btn btn-activity ${isActive ? 'active' : 'inactive'}`;
+                btn.innerText = isActive ? 'Active' : 'Inactive';
+                btn.setAttribute('onclick', `window.toggleActivity(${id}, ${isActive})`);
+            }
+        } catch (error) {
+            console.error(`Failed to fetch activity status for monitor ${id}`, error);
+        }
     }
 
     // --- Activity Toggle Skeleton ---
@@ -83,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newStatus = !currentStatus;
 
             // Optimistically update the UI button immediately
-            const btn = document.querySelector(`button[onclick="window.toggleActivity(${id}, ${currentStatus})"]`);
+            const btn = document.getElementById(`activity-btn-${id}`);
             if (btn) {
                 btn.className = `btn btn-activity ${newStatus ? 'active' : 'inactive'}`;
                 btn.innerText = newStatus ? 'Active' : 'Inactive';
@@ -99,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Remove loadMonitors() to stop it from overwriting the UI with stale backend state
         } catch (err) {
             // Revert on error
-            const btn = document.querySelector(`button[onclick="window.toggleActivity(${id}, ${!currentStatus})"]`);
+            const btn = document.getElementById(`activity-btn-${id}`);
             if (btn) {
                 btn.className = `btn btn-activity ${currentStatus ? 'active' : 'inactive'}`;
                 btn.innerText = currentStatus ? 'Active' : 'Inactive';
