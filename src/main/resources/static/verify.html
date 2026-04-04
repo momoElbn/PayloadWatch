@@ -1,13 +1,35 @@
-<div class="auth-card card">
-    <div class="auth-logo">PayloadWatch.</div>
-    <h2>Verify your email</h2>
-    <p class="text-muted">Enter the 6-digit code sent to your inbox.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayloadWatch | Verify Email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page"> <div class="auth-container">
+    <div class="auth-card card">
+        <div class="logo" style="text-align: center; margin-bottom: 24px; font-size: 24px;">PayloadWatch.</div>
+        <h2 style="text-align: center; margin-bottom: 8px;">Verify your email</h2>
+        <p class="text-muted" style="text-align: center; margin-bottom: 24px; font-size: 14px;">Enter the 6-digit code sent to your inbox.</p>
 
-    <form id="verifyForm">
-        <div class="form-group">
-            <input type="text" id="verificationCode" placeholder="000000" required maxlength="6" style="text-align: center; letter-spacing: 8px; font-size: 24px;">
+        <form id="verifyForm">
+            <div class="form-group">
+                <input type="text" id="verificationCode" placeholder="000000" required maxlength="6"
+                       style="text-align: center; letter-spacing: 12px; font-size: 28px; font-weight: 600; padding: 16px;">
+            </div>
+
+            <div id="verifyError" style="color: var(--status-down); font-size: 13px; text-align: center; margin-bottom: 16px; display: none;"></div>
+
+            <button type="submit" class="btn btn-primary" id="verifyBtn" style="width: 100%;">Confirm Account</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="login.html" class="text-muted" style="font-size: 13px; text-decoration: none;">Back to Login</a>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Account</button>
-    </form>
+    </div>
 </div>
+
 <script src="verify.js"></script>
+</body>
+</html>

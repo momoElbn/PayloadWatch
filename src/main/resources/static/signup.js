@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Sign up successful!");
                 alert("Account successfully created! Please check your email for a verification code, then log in.");
 
-                // Send them back to the login page
-                window.location.href = "login.html";
+                const userEmail = document.getElementById('signupEmail').value;
+                window.location.href = `verify.html?email=${encodeURIComponent(userEmail)}`;
             } else {
                 console.error("Sign up failed:", data.message);
                 alert("Sign up failed: " + (data.message || "Please check your password requirements."));

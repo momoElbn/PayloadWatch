@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tableCard.style.display = 'block';
         emptyState.style.display = 'none';
         tableBody.innerHTML = `
-            <tr><td colspan="5"><div class="skeleton"></div></td></tr>
-            <tr><td colspan="5"><div class="skeleton" style="width: 80%"></div></td></tr>
+            <tr><td colspan="6"><div class="skeleton"></div></td></tr>
+            <tr><td colspan="6"><div class="skeleton" style="width: 80%"></div></td></tr>
         `;
 
         try {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             window.showToast('Failed to load monitors', 'error');
-            tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--status-down);">Failed to load data.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--status-down);">Failed to load data.</td></tr>`;
         }
     }
 
@@ -48,6 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.innerHTML = '';
         monitors.forEach(m => {
             const statusColor = m.status === 'UP' ? 'up' : 'down';
+            
+            // Expected backend property is "isActive" 
+            const isActive = m.isActive !== false; 
+            const activityClass = isActive ? 'active' : 'inactive';
+            const activityText = isActive ? 'Active' : 'Inactive';
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -58,6 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td>${m.interval} min</td>
                 <td><span class="status-dot ${statusColor}"></span>${m.status}</td>
+                <td>
+                    <button class="btn btn-activity ${activityClass}" onclick="window.toggleActivity(${m.id}, ${isActive})">
+                        ${activityText}
+                    </button>
+                </td>
                 <td class="cell-actions">
                     <button class="btn btn-secondary" style="padding: 6px 12px; font-size:12px;" onclick='window.editMonitor(${JSON.stringify(m)})'>Edit</button>
                     <button class="btn btn-danger" onclick="window.confirmDelete(${m.id}, '${m.name}')">Delete</button>
@@ -66,6 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
             tableBody.appendChild(tr);
         });
     }
+
+    // --- Activity Toggle Skeleton ---
+    window.toggleActivity = async (id, currentStatus) => {
+        try {
+            const newStatus = !currentStatus;
+            
+            // Update endpoint to send 'isActive'
+            await API.request(`/monitors/${id}/activity`, {
+                method: 'PATCH',
+                body: JSON.stringify({ isActive: newStatus })
+            });
+
+            window.showToast(`Monitor ${newStatus ? 'activated' : 'deactivated'}`, 'success');
+            loadMonitors(); // Refresh the table
+        } catch (err) {
+            window.showToast('Failed to change monitor activity', 'error');
+        }
+    };
 
     // --- 2. Modal Management ---
     window.openMonitorModal = () => {
