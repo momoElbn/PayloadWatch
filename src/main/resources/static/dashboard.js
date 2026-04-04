@@ -252,9 +252,21 @@ document.addEventListener('DOMContentLoaded', () => {
                              </div>`;
             }
 
+            // Format timestamp to Toronto Time: Month Day Time(HH:MM:SS)
+            const dateObj = new Date(log.timestamp);
+            const formattedDate = dateObj.toLocaleString('en-US', {
+                timeZone: 'America/Toronto',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }).replace(',', '');
+
             tbody.innerHTML += `
                 <tr>
-                    <td style="color: var(--text-secondary); vertical-align: top; padding-top: 14px;">${log.timestamp}</td>
+                    <td style="color: var(--text-secondary); vertical-align: top; padding-top: 14px;">${formattedDate}</td>
                     <td style="vertical-align: top; padding-top: 12px;">
                         <div><span class="status-dot ${dotClass}"></span>${log.statusCode}</div>
                         ${errorHtml} </td>
