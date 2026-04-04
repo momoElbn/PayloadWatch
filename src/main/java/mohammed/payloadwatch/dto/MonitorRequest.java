@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 public class MonitorRequest {
-    // Notice: NO ID and NO STATUS. The frontend should never send these.
+    // frontend payload without id or status
     private String name;
     private String url;
     private String httpMethod;

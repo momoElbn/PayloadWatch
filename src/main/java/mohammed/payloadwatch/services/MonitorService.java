@@ -69,10 +69,10 @@ public class MonitorService {
             return null;
         }
 
-        // 1. Check how many monitors they currently have
+        // Get current monitor count
         int currentMonitorCount = getAllMonitorsForUser(cognitoSub).size();
 
-        // 2. Enforce the limit based on their plan (Defaulting to 5 for Free Tier)
+        // Enforce monitor limits
         int maxMonitors = "PRO".equalsIgnoreCase(user.getPlanTier()) ? 50 : 5;
 
         if (currentMonitorCount >= maxMonitors) {
@@ -118,7 +118,7 @@ public class MonitorService {
         monitor.setHttpMethod(request.getHttpMethod());
         monitor.setIntervalInMinutes(request.getInterval());
 
-        // Clear existing contracts and add new ones
+        // Update contracts
         monitor.getContracts().clear();
         for(ContractDto contractDto : request.getContracts()) {
             Contract contract = new Contract();

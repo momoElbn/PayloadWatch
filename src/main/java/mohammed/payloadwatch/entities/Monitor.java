@@ -100,8 +100,8 @@ public class Monitor {
         this.url = url;
         this.httpMethod = httpMethod;
         this.intervalInMinutes = intervalInMinutes;
-        this.isActive = true; // Default to active when created
-        this.lastCheckedAt = Instant.now(); // Initialize to current time
+        this.isActive = true; // default active
+        this.lastCheckedAt = Instant.now(); // default timestamp
         this.createdAt = Instant.now();
         this.contracts = contracts;
     }

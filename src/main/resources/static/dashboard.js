@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let monitorToDelete = null;
 
-    // --- 1. Dashboard Initialization & Auto-Refresh ---
+    // init dashboard
     loadMonitors();
     setInterval(loadMonitors, 60000); // 60s Heartbeat
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- 2. Modal Management ---
+    // setup section
     window.openMonitorModal = () => {
         monitorForm.reset();
         document.getElementById('monitorId').value = '';
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 3. Delete Flow ---
+    // setup section
     window.confirmDelete = (id, name) => {
         monitorToDelete = id;
         document.getElementById('deleteMonitorName').innerText = name;
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 4. Log History ---
+    // setup section
     function renderHistoryRows(logs = []) {
         const tbody = document.getElementById('historyTableBody');
         tbody.innerHTML = '';
@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadHistory(id, range || '24h');
     };
 
-    // --- 5. UX Polish: Toasts & Time Ranges ---
+    // setup section
     window.showToast = (message, type = 'success') => {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 6. Dynamic Contract Builder Logic ---
+    // setup section
     window.addContractRow = (key = '', type = 'STRING') => {
         const row = document.createElement('div');
         row.className = 'contract-row';
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addContractRow();
     });
 
-    // --- 7. Logout Flow ---
+    // setup section
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {

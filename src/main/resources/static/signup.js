@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Theme Management ---
+    // configure theme
     const signupThemeSelect = document.getElementById('signupThemeSelect');
     const savedTheme = localStorage.getItem('payloadwatch_theme') || 'light';
 
@@ -19,15 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. Sign Up Flow ---
+    // handle signup
     document.getElementById('signupForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        // Grabbing the exact IDs from the HTML above
+        // get form values
         const email = document.getElementById('signupEmail').value;
         const password = document.getElementById('signupPassword').value;
 
-        // AWS Configuration
+        // config
         const clientId = "276ooik5vjov8ijgjfutv6vn4b";
         const region = "ca-central-1";
 
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Success!
+                // success
                 console.log("Sign up successful!");
                 alert("Account successfully created! Please check your email for a verification code, then log in.");
 

@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Grab the email from the URL
+    // Grab the email from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const email = urlParams.get('email');
     const errorDiv = document.getElementById('verifyError');
 
-    // 2. Safety Check: If no email is in the URL, kick them back to login/signup
+    // If no email is in the URL, kick them back to login/signup
     if (!email) {
         alert("Session expired or invalid link. Please try signing up or logging in again.");
         window.location.href = "login.html";
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                // Success! Redirect to login with a success flag
+                // success Redirect to login with a success flag
                 window.location.href = "login.html?verified=true";
             } else {
                 const data = await response.json();

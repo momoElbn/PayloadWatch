@@ -1,7 +1,7 @@
 package mohammed.payloadwatch.dto;
 
 public record UserSettingsResponse(
-        String accountId, // This will be the cognito_sub
+        String accountId, // user cognito sub
         String email,
         String planTier,
         String timeZonePreference,

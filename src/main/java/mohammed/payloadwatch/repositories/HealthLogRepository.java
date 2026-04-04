@@ -9,10 +9,10 @@ import java.time.Instant;
 
 public interface HealthLogRepository extends JpaRepository<HealthLog, Long> {
 
-    // Fetch all health logs for a specific monitor since a given timestamp (used for the "History" tab)
+    // get recent health logs
     List<HealthLog> findByMonitorIdAndTimestampAfter(Long monitorId, Instant since);
 
-    // Used to show the "Current Status" on the dashboard
+    // get latest health log
     HealthLog findFirstByMonitorIdOrderByTimestampDesc(Long monitorId);
 
     // MAINTENANCE: Deletes logs older than a specific date to prevent database bloat

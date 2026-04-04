@@ -19,7 +19,7 @@ public class UserService {
         String cognitoSub = jwt.getSubject();
         String email = jwt.getClaimAsString("email");
 
-        //1. Query to find the user by their Cognito sub
+        // Find user by Cognito sub
         User user = userRepository.findByCognitoSub(cognitoSub);
 
         if (user == null) {

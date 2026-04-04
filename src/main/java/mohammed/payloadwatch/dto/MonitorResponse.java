@@ -7,12 +7,12 @@ import java.util.List;
 @Getter
 @Setter
 public class MonitorResponse {
-    private Long id;              // Needed so the frontend can edit/delete
+    private Long id;              // allows edit/delete
     private String name;
     private String url;
     private String httpMethod;
     private int interval;
-    private String status;        // Needed for the UP/DOWN green dot
+    private String status;        // indicates status
     private List<ContractDto> contracts;
 
     public MonitorResponse(Long id, String name, String url, String httpMethod, int interval, String status, List<ContractDto> contracts) {

@@ -1,7 +1,7 @@
 // settings.js - SPA Routing, Theme Management, and Settings Logic
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. Main SPA Routing (Dashboard vs Settings) ---
+    // setup section
     const navDashboard = document.getElementById('navDashboard');
     const navSettings = document.getElementById('navSettings');
     const dashboardView = document.getElementById('dashboardView');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headerCreateBtn.style.display = 'none';
     });
 
-    // --- 2. Settings Sub-Navigation Logic ---
+    // setup section
     const settingsTabs = document.querySelectorAll('.settings-tab');
     const settingsPanes = document.querySelectorAll('.settings-pane');
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 3. REAL API INTEGRATION: Load Data ---
+    // setup section
     const themeSelect = document.getElementById('themeSelect');
     const timezoneSelect = document.getElementById('timezoneSelect');
     const emailAlertToggle = document.getElementById('emailAlertToggle'); // Assuming this is a checkbox
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load everything when page opens
     loadSettings();
 
-    // --- 4. REAL API INTEGRATION: Save Data ---
+    // setup section
     async function saveSettingsToServer() {
         const payload = {
             emailAlertsEnabled: emailAlertToggle ? emailAlertToggle.checked : false,
