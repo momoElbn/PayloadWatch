@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // init dashboard
     loadMonitors();
-    setInterval(() => loadMonitors(true), 30000); // Silent 30s Heartbeat
+    setInterval(() => loadMonitors(true), 10000); // Silent 10s Heartbeat
 
     async function loadMonitors(isSilent = false) {
         // Render Skeleton Loader only if it is not a silent background refresh

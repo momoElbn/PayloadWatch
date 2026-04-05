@@ -18,7 +18,11 @@ const API = {
             ...options.headers
         };
 
-        const config = { ...options, headers };
+        const config = { 
+            ...options, 
+            headers,
+            cache: 'no-store'
+        };
 
         try {
             console.log(`[Network] ${config.method || 'GET'} ${API_BASE_URL}${endpoint}`);
