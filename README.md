@@ -36,18 +36,25 @@ https://github.com/user-attachments/assets/2323d195-381c-4b89-9861-b0b434435224
 ### ☁️ Cloud Infrastructure (AWS)
 PayloadWatch is designed for high availability and is fully deployed on a serverless AWS architecture:
 
-* **Networking & Traffic Routing:**
-  * **Route 53 & ACM:** Custom domain routing (`payload-watch.com`) secured with free public SSL certificates via AWS Certificate Manager.
-  * **Application Load Balancer (ALB):** Acts as the single public entry point, forcing HTTPS redirection and intelligently routing traffic only to healthy containers.
-  * **VPC & Security Groups:** A strict "Circle of Trust" firewall architecture. The ALB is the only resource exposed to the internet, while the compute and database layers reside in isolated subnets.
-* **Compute Layer (Serverless):**
-  * **Amazon ECS & AWS Fargate:** The containerized Spring Boot application runs on Fargate Spot, providing serverless compute without the overhead of managing EC2 instances. 
-  * **Amazon ECR:** Private registry hosting the compiled AMD64 Docker images.
-* **Data & Auth Layer:**
-  * **Amazon RDS:** Managed PostgreSQL database handling persistent storage for contracts and health logs.
-  * **Amazon Cognito:** Manages SSO, user registration, and issues JWT tokens for secure API access.
-* **Monitoring:**
-  * **CloudWatch:** Captures all application logs and container metrics for real-time debugging and monitoring.
+**Networking & Traffic Routing:**
+  
+  * **Route 53 & ACM:** Custom domain routing (`payload-watch.com`) secured with free public SSL certificates via AWS Certificate Manager.
+  * **Application Load Balancer (ALB):** Acts as the single public entry point, forcing HTTPS redirection and intelligently routing traffic only to healthy containers.
+  * **VPC & Security Groups:** A strict "Circle of Trust" firewall architecture. The ALB is the only resource exposed to the internet, while the compute and database layers reside in isolated subnets.
+
+**Compute Layer (Serverless):**
+  
+  * **Amazon ECS & AWS Fargate:** The containerized Spring Boot application runs on Fargate Spot, providing serverless compute without the overhead of managing EC2 instances. 
+  * **Amazon ECR:** Private registry hosting the compiled AMD64 Docker images.
+
+**Data & Auth Layer:**
+  
+  * **Amazon RDS:** Managed PostgreSQL database handling persistent storage for contracts and health logs.
+  * **Amazon Cognito:** Manages SSO, user registration, and issues JWT tokens for secure API access.
+
+**Monitoring:**
+  
+  * **CloudWatch:** Captures all application logs and container metrics for real-time debugging and monitoring.
 
 <img width="1454" height="898" alt="Cloud-Infrastructure_PayloadWatch" src="https://github.com/user-attachments/assets/e7fa2417-8d8f-43e0-aa51-b9040510fdce" />
 
