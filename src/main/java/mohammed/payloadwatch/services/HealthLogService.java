@@ -3,9 +3,12 @@ package mohammed.payloadwatch.services;
 import mohammed.payloadwatch.dto.HealthLogResponse;
 import mohammed.payloadwatch.entities.HealthLog;
 import mohammed.payloadwatch.repositories.HealthLogRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,4 +39,12 @@ public class HealthLogService {
         return responses;
     }
 
+    // Daily cleanup task to remove logs older than 7 days
+    @Scheduled(cron = "0 0 2 * * ?")
+    @Transactional
+    public void cleanupOldLogs() {
+        System.out.println("Running daily cleanup task to delete old health logs...");
+        Instant cutoffDate = Instant.now().minus(7, ChronoUnit.DAYS);
+        healthLogRepository.deleteByTimestampBefore(cutoffDate);
+    }
 }
