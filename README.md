@@ -122,7 +122,7 @@ The following features are currently in active development and will be rolled ou
 Automated, low-latency email notifications dispatched the moment the engine detects a breached JSON contract or degraded API performance.
 
 ### Subscription Tiers: 
-Implementation of tiered account usage, unlocking premium features such as higher-frequency polling intervals and extended historical health analytics.
+Implementation of tiered account usage, unlocking premium features such as higher-frequency polling intervals and extended monitor limit.
 
 ---
 
