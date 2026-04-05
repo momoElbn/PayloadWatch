@@ -18,10 +18,12 @@ services:
 
   db:
     image: postgres:17
+    env_file:
+      - .env
     ports:
       - "5433:5432" # local -> container
     environment:
-      - POSTGRES_DB=payloadwatch_local
+      - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
