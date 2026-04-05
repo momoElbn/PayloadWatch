@@ -79,6 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Calculate the percentage (Math.min ensures it doesn't go over 100% visually)
                 const usagePercent = Math.min((currentMonitors / maxMonitors) * 100, 100);
 
+                if (headerCreateBtn) {
+                    if (currentMonitors >= maxMonitors) {
+                        headerCreateBtn.style.opacity = '0.5';
+                        headerCreateBtn.style.pointerEvents = 'none';
+                        headerCreateBtn.innerText = 'Limit Reached';
+                    } else {
+                        headerCreateBtn.style.opacity = '1';
+                        headerCreateBtn.style.pointerEvents = 'auto';
+                        headerCreateBtn.innerText = '+ Create Monitor';
+                    }
+                }
+
                 const progressBar = document.getElementById('settingProgressBar');
                 const progressText = document.getElementById('settingProgressText');
 

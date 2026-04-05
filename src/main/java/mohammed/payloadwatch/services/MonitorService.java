@@ -40,6 +40,7 @@ public class MonitorService {
             String httpMethod = monitor.getHttpMethod();
             int interval = monitor.getIntervalInMinutes();
             String status = monitor.getCurrentStatus();
+            boolean active = monitor.isActive();
 
             List<ContractDto> contractDtos = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public class MonitorService {
                 contractDtos.add(new ContractDto(expectedKey, expectedtype));
             });
 
-            monitorResponses.add(new MonitorResponse(id, name, url, httpMethod, interval, status, contractDtos));
+            monitorResponses.add(new MonitorResponse(id, name, url, httpMethod, interval, status, active, contractDtos));
         }
 
         return monitorResponses;

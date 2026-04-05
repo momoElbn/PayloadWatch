@@ -13,15 +13,17 @@ public class MonitorResponse {
     private String httpMethod;
     private int interval;
     private String status;        // indicates status
+    private boolean active;
     private List<ContractDto> contracts;
 
-    public MonitorResponse(Long id, String name, String url, String httpMethod, int interval, String status, List<ContractDto> contracts) {
+    public MonitorResponse(Long id, String name, String url, String httpMethod, int interval, String status, boolean active, List<ContractDto> contracts) {
         this.id = id;
         this.name = name;
         this.url = url;
         this.httpMethod = httpMethod;
         this.interval = interval;
         this.status = status;
+        this.active = active;
         this.contracts = contracts;
     }
 }

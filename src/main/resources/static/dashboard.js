@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
         monitors.forEach(m => {
             const statusColor = m.status === 'UP' ? 'up' : 'down';
             
-            // Expected backend property is "isActive" 
-            const isActive = m.isActive !== false; 
+            // Expected backend property is "active" 
+            const isActive = m.active !== false; 
             const activityClass = isActive ? 'active' : 'inactive';
             const activityText = isActive ? 'Active' : 'Inactive';
 
@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${m.interval} min</td>
                 <td><span class="status-dot ${statusColor}"></span>${m.status}</td>
                 <td>
-                    <button id="activity-btn-${m.id}" class="btn btn-activity ${activityClass}" onclick="window.toggleActivity(${m.id}, true)">
-                        Loading...
+                    <button id="activity-btn-${m.id}" class="btn btn-activity ${activityClass}" onclick="window.toggleActivity(${m.id}, ${isActive})">
+                        ${activityText}
                     </button>
                 </td>
                 <td class="cell-actions">
@@ -82,24 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
             `;
             tableBody.appendChild(tr);
-
-            // Fetch the actual activity status from the backend
-            fetchActivityStatus(m.id);
         });
-    }
-
-    async function fetchActivityStatus(id) {
-        try {
-            const isActive = await API.request(`/monitors/${id}/activity`);
-            const btn = document.getElementById(`activity-btn-${id}`);
-            if (btn) {
-                btn.className = `btn btn-activity ${isActive ? 'active' : 'inactive'}`;
-                btn.innerText = isActive ? 'Active' : 'Inactive';
-                btn.setAttribute('onclick', `window.toggleActivity(${id}, ${isActive})`);
-            }
-        } catch (error) {
-            console.error(`Failed to fetch activity status for monitor ${id}`, error);
-        }
     }
 
     // --- Activity Toggle Skeleton ---
