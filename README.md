@@ -8,7 +8,7 @@
 
 **PayloadWatch** is a cloud-native API observability platform designed to catch silent data failures that standard uptime monitors miss.
 
-While traditional monitors only verify `HTTP 200 OK` status codes, PayloadWatch acts as an automated contract enforcer. It utilizes an autonomous Spring Boot polling engine to continuously evaluate external API responses against user-defined JSON schemas. By validating structural integrity and the presence of critical data fields in real-time, it guarantees backend reliability and prevents broken payloads from reaching the client.
+While traditional monitors only verify `HTTP 200 OK` status codes, PayloadWatch acts as an automated contract enforcer. It utilizes an autonomous Spring Boot polling engine to continuously evaluate external API responses against user-defined JSON contracts. By validating the presence of critical data fields in real-time, it guarantees backend reliability and prevents broken payloads from reaching the client.
 
 https://github.com/user-attachments/assets/2323d195-381c-4b89-9861-b0b434435224
 
@@ -16,7 +16,7 @@ https://github.com/user-attachments/assets/2323d195-381c-4b89-9861-b0b434435224
 
 ## ✨ Key Features
 
-* **JSON Contract Validation:** Goes beyond basic pinging by actively parsing response payloads via Jackson to ensure required data keys and types are present.
+* **JSON Contract Validation:** Goes beyond basic pinging by actively parsing response payloads to ensure required data keys and types are present.
 * **Autonomous Polling Engine:** A `@Scheduled` Spring Boot worker that manages its own execution cycles and database querying without blocking main threads.
 * **Stateless Security:** Secures all REST endpoints utilizing AWS Cognito for JWT-based identity management and route protection.
 * **Lightweight Dashboard:** A blazing-fast, framework-free Vanilla JavaScript Single Page Application (SPA) for managing monitors and viewing health metrics.
