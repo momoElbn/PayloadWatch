@@ -72,6 +72,7 @@ You can spin up the entire PayloadWatch backend and database in seconds using Do
 ### Prerequisites
 * **Docker Desktop** installed and running.
 * An **AWS Account** (for Cognito authentication).
+  * **Note on Authentication:** PayloadWatch uses AWS Cognito for secure, stateless identity management. To run this locally, you'll need to create a User Pool in your own AWS account and update the .env file with your ISSUER_URI and CLIENT_ID. This ensures your local development data remains entirely isolated and under your control.
 
 ### 1. Clone the Repository
 ```bash
@@ -90,8 +91,15 @@ DB_NAME=your_database_name
 DB_URL=jdbc:postgresql://db:5432/${DB_NAME}
 DB_USERNAME=postgres
 DB_PASSWORD=your_secure_password
+
+# AWS Cognito Configuration
+# Example: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_abcd12345
 COGNITO_ISSUER_URI=https://cognito-idp.[region].amazonaws.com/[your_pool_id]
+
+# Example: 7abc1234567890defghijk
 COGNITO_CLIENT_ID=your_cognito_app_client_id
+
+# Infrastructure Region
 AWS_REGION=your_aws_region
 ```
 
