@@ -313,16 +313,72 @@ body.dark-mode .table th {
     padding: 40px;
 }
 
-.auth-logo {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 32px;
-    letter-spacing: -0.5px;
-    color: var(--text-primary);
-    text-align: center;
+.password-input-wrapper {
+    position: relative;
 }
 
-.text-center { text-align: center; }
+.password-input-wrapper input {
+    padding-right: 42px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.password-toggle:hover {
+    color: var(--text-primary);
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 2px;
+}
+
+.eye-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.is-hidden {
+    display: none;
+}
+
+.field-error,
+.form-error,
+.form-success {
+    font-size: 12px;
+    line-height: 1.3;
+    margin-top: 6px;
+    display: none;
+}
+
+.field-error,
+.form-error {
+    color: var(--status-down);
+}
+
+.form-success {
+    color: var(--status-up);
+    margin-bottom: 12px;
+}
+
+.form-error {
+    margin-bottom: 12px;
+}
+
+.field-error.show,
+.form-error.show,
+.form-success.show {
+    display: block;
+}
 
 /* =========================================
    12. HTTP Method Badges

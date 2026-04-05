@@ -36,6 +36,6 @@ public class HealthLogController {
             since = Instant.now().minus(7, ChronoUnit.DAYS);
         }
 
-        return healthLogService.getMonitorHistory(monitorId, since);
+        return healthLogService.getMonitorHistory(monitorId, user.getCognitoSub(), since);
     }
 }

@@ -6,15 +6,16 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-# Package the application (skipping tests to speed up the build)
-RUN mvn clean package -DskipTests
+# Package and keep only the runnable Spring Boot jar as /app/app.jar
+RUN mvn clean package -DskipTests \
+    && cp "$(ls target/*.jar | grep -v '\.original$' | head -n 1)" /app/app.jar
 
 # --- Stage 2: Run the Application ---
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy ONLY the built .jar file from the first stage
-COPY --from=build /app/target/*.jar app.jar
+# Copy exactly one jar from build stage
+COPY --from=build /app/app.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -4,13 +4,12 @@ import mohammed.payloadwatch.entities.HealthLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.time.Instant;
 
 public interface HealthLogRepository extends JpaRepository<HealthLog, Long> {
 
-    // get recent health logs
-    List<HealthLog> findByMonitorIdAndTimestampAfter(Long monitorId, Instant since);
+    // get recent health logs scoped to the owning user
+    List<HealthLog> findByMonitorIdAndMonitorUserCognitoSubAndTimestampAfter(Long monitorId, String cognitoSub, Instant since);
 
     // get latest health log
     HealthLog findFirstByMonitorIdOrderByTimestampDesc(Long monitorId);

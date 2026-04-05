@@ -36,7 +36,7 @@ public class PollingEngine {
 
         List<Monitor> monitors = monitorRepository.findMonitorsDueForPingAndIsActive();
         for (Monitor monitor : monitors) {
-            asyncPingerService.pingAndSave(monitor, restClient);
+            asyncPingerService.pingAndSave(monitor.getId(), restClient);
         }
     }
 }

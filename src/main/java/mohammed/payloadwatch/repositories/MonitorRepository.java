@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.time.Instant;
 import java.util.Optional;
 
 public interface MonitorRepository extends JpaRepository<Monitor, Long> {
@@ -24,5 +23,9 @@ public interface MonitorRepository extends JpaRepository<Monitor, Long> {
             nativeQuery = true
     )
     List<Monitor> findMonitorsDueForPingAndIsActive();
+
+    // Load monitor + contracts in one query so async workers can safely access contracts
+    @Query("SELECT DISTINCT m FROM Monitor m LEFT JOIN FETCH m.contracts WHERE m.id = :monitorId")
+    Optional<Monitor> findByIdWithContracts(@Param("monitorId") Long monitorId);
 
 }

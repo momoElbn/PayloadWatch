@@ -19,15 +19,96 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const emailInput = document.getElementById('signupEmail');
+    const passwordInput = document.getElementById('signupPassword');
+    const emailError = document.getElementById('signupEmailError');
+    const passwordError = document.getElementById('signupPasswordError');
+    const formError = document.getElementById('signupFormError');
+    const signupBtn = document.getElementById('signupBtn');
+
+    function setFieldError(inputEl, errorEl, message) {
+        if (inputEl) inputEl.classList.add('error');
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+    }
+
+    function clearFieldError(inputEl, errorEl) {
+        if (inputEl) inputEl.classList.remove('error');
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.classList.remove('show');
+        }
+    }
+
+    function setFormError(message) {
+        if (!formError) return;
+        formError.textContent = message;
+        formError.classList.add('show');
+    }
+
+    function clearFormError() {
+        if (!formError) return;
+        formError.textContent = '';
+        formError.classList.remove('show');
+    }
+
+    [emailInput, passwordInput].forEach((input) => {
+        if (!input) return;
+        input.addEventListener('input', () => {
+            clearFormError();
+            if (input === emailInput) clearFieldError(emailInput, emailError);
+            if (input === passwordInput) clearFieldError(passwordInput, passwordError);
+        });
+    });
+
+    const togglePasswordBtn = document.getElementById('toggleSignupPassword');
+    if (togglePasswordBtn && passwordInput) {
+        const eyeOpenIcon = togglePasswordBtn.querySelector('.eye-open');
+        const eyeClosedIcon = togglePasswordBtn.querySelector('.eye-closed');
+
+        function syncPasswordToggleState() {
+            const isVisible = passwordInput.type === 'text';
+            togglePasswordBtn.setAttribute('aria-pressed', String(isVisible));
+            togglePasswordBtn.setAttribute('aria-label', isVisible ? 'Hide password' : 'Show password');
+            if (eyeOpenIcon) eyeOpenIcon.classList.toggle('is-hidden', !isVisible);
+            if (eyeClosedIcon) eyeClosedIcon.classList.toggle('is-hidden', isVisible);
+        }
+
+        syncPasswordToggleState();
+
+        togglePasswordBtn.addEventListener('click', () => {
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            syncPasswordToggleState();
+        });
+    }
+
     // handle signup
     document.getElementById('signupForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        // get form values
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
+        clearFieldError(emailInput, emailError);
+        clearFieldError(passwordInput, passwordError);
+        clearFormError();
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!email) {
+            setFieldError(emailInput, emailError, 'Email is required.');
+            return;
+        }
+
+        if (!password) {
+            setFieldError(passwordInput, passwordError, 'Password is required.');
+            return;
+        }
 
         try {
+            signupBtn.disabled = true;
+            signupBtn.innerText = 'Creating...';
+
             // fetch config from backend
             const configResponse = await fetch('/api/public/config');
             if (!configResponse.ok) throw new Error('Failed to load configuration');
@@ -52,20 +133,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // success
-                console.log("Sign up successful!");
-                alert("Account successfully created! Please check your email for a verification code, then log in.");
-
-                const userEmail = document.getElementById('signupEmail').value;
+                const userEmail = emailInput.value;
                 window.location.href = `verify.html?email=${encodeURIComponent(userEmail)}`;
+                return;
+            }
+
+            const message = data.message || 'Please check your password requirements.';
+            if (message.toLowerCase().includes('password')) {
+                setFieldError(passwordInput, passwordError, message);
+            } else if (message.toLowerCase().includes('email') || message.toLowerCase().includes('username')) {
+                setFieldError(emailInput, emailError, message);
             } else {
-                console.error("Sign up failed:", data.message);
-                alert("Sign up failed: " + (data.message || "Please check your password requirements."));
+                setFormError(message);
             }
 
         } catch (error) {
-            console.error("Network error during sign up:", error);
-            alert("Could not connect to the authentication server.");
+            console.error('Network error during sign up:', error);
+            setFormError('Could not connect to the authentication server.');
+        } finally {
+            signupBtn.disabled = false;
+            signupBtn.innerText = 'Sign Up';
         }
     });
 });

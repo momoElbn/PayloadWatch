@@ -30,7 +30,12 @@ public class AsyncPingerService {
 
     @Async
     @Transactional
-    public void pingAndSave(Monitor monitor, RestClient restClient) {
+    public void pingAndSave(Long monitorId, RestClient restClient) {
+        Monitor monitor = monitorRepository.findByIdWithContracts(monitorId).orElse(null);
+        if (monitor == null || !monitor.isActive()) {
+            return;
+        }
+
         Instant start = Instant.now();
         int statusCode;
         boolean isSuccess = false;

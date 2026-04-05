@@ -26,14 +26,31 @@
             <div class="form-group">
                 <label class="form-label" for="signupEmail">Email Address</label>
                 <input type="email" id="signupEmail" required placeholder="you@company.com">
+                <small id="signupEmailError" class="field-error"></small>
             </div>
 
             <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label mb-0" for="signupPassword">Password</label>
-                <input type="password" id="signupPassword" required placeholder="••••••••" style="margin-top: 6px;">
+                <div class="password-input-wrapper" style="margin-top: 6px;">
+                    <input type="password" id="signupPassword" required placeholder="••••••••">
+                    <button type="button" id="toggleSignupPassword" class="password-toggle" aria-label="Show password" aria-pressed="false">
+                        <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        <svg class="eye-icon eye-closed is-hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.78 21.78 0 0 1 5.06-7.94"></path>
+                            <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-2.16 3.19"></path>
+                            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                    </button>
+                </div>
+                <small id="signupPasswordError" class="field-error"></small>
                 <small class="text-muted" style="font-size: 12px; display: block; margin-top: 6px;">Must be at least 8 characters and contain a special character.</small>
             </div>
 
+            <small id="signupFormError" class="form-error"></small>
             <button type="submit" class="btn btn-primary" id="signupBtn" style="width: 100%; padding: 12px; font-size: 15px;">Sign Up</button>
         </form>
 
