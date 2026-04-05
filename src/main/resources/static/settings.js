@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
         settingsView.style.display = 'block';
         headerTitle.innerText = 'Settings';
         headerCreateBtn.style.display = 'none';
+        
+        // Ensure data is fresh every time the user opens the Settings view
+        if (typeof window.loadSettings === 'function') {
+            window.loadSettings();
+        }
     });
 
     // setup section
