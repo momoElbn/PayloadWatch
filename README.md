@@ -1,4 +1,3 @@
-<img width="886" height="795" alt="Screenshot 2026-04-06 at 8 24 26 PM" src="https://github.com/user-attachments/assets/16b4048f-7a91-4af0-8370-b0a83495d954" />
 # PayloadWatch 🛡️
 
 ![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java)
