@@ -61,7 +61,9 @@ PayloadWatch is designed for high availability and is fully deployed on a server
 
 ### 🗄️ Database Architecture
 PayloadWatch is built on a fully normalized **PostgreSQL** relational database. The schema separates core user data from the high-volume background logging engine to ensure scalable polling performance.
-![Final Database Schema](images/final-database-diagram-payloadwatch.png)
+
+<img width="1454" height="898" alt="Cloud-Infrastructure_PayloadWatch" src="images/final-database-diagram-payloadwatch.png" />
+
 
 ---
 
