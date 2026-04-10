@@ -1,3 +1,4 @@
+<img width="886" height="795" alt="Screenshot 2026-04-06 at 8 24 26 PM" src="https://github.com/user-attachments/assets/16b4048f-7a91-4af0-8370-b0a83495d954" />
 # PayloadWatch 🛡️
 
 ![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java)
@@ -62,7 +63,7 @@ PayloadWatch is designed for high availability and is fully deployed on a server
 ### 🗄️ Database Architecture
 PayloadWatch is built on a fully normalized **PostgreSQL** relational database. The schema separates core user data from the high-volume background logging engine to ensure scalable polling performance.
 
-![Database-Infrastructure_PayloadWatch](images/final-database-diagram-payloadwatch.png)
+<img width="886" height="795" alt="Database-Diagram" src="https://github.com/user-attachments/assets/020f0a48-a2b8-4919-b6e4-d12b2e9c9202" />
 
 ---
 
