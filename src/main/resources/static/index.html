@@ -58,7 +58,6 @@
                     <button class="settings-tab active" data-target="pane-appearance">Appearance</button>
                     <button class="settings-tab" data-target="pane-alerting">Alerting</button>
                     <button class="settings-tab" data-target="pane-account">Account & Security</button>
-                    <button class="settings-tab" data-target="pane-plan">Plan & Billing</button>
                 </aside>
 
                 <div class="settings-content card">
@@ -103,31 +102,21 @@
                             <label class="form-label">Email Address</label>
                             <input type="email" id="settingEmail" value="" disabled class="disabled-input">
                         </div>
-                        <div class="form-group max-w-md">
-                            <label class="form-label">Cognito ID</label>
-                            <input type="text" id="settingAccountId" value="" disabled class="disabled-input" style="font-family: monospace;">
-                        </div>
-                    </div>
-
-                    <div class="settings-pane" id="pane-plan">
-                        <h3 class="pane-title">Subscription Plan</h3>
-                        <hr class="pane-divider">
-
-                        <div class="plan-badge" id="settingPlan">Hobby Plan (Free Tier)</div>
-
-                        <div class="usage-section mt-xl">
-                            <div class="flex-between mb-sm">
-                                <span class="form-label mb-0">Monitors Used</span>
-                                <span class="font-bold"><span id="settingMonitorCount">0</span> / 5</span>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-fill" id="settingProgressBar" style="width: 0%;"></div>
-                            </div>
-                            <p class="text-muted text-sm mt-sm" id="settingProgressText">You are using 0% of your free tier monitor limit.</p>
-                        </div>
 
                         <div class="mt-xl pt-md border-top">
-                            <button class="btn btn-primary" disabled style="background-color: var(--latency-warn); opacity: 0.8;">Upgrade to Pro (Coming Soon)</button>
+                            <h3 class="pane-subtitle mb-md">Change Password</h3>
+                            <form id="changePasswordForm">
+                                <div class="form-group max-w-md">
+                                    <label class="form-label" for="currentPassword">Current Password</label>
+                                    <input type="password" id="currentPassword" required placeholder="••••••••">
+                                </div>
+                                <div class="form-group max-w-md">
+                                    <label class="form-label" for="newPassword">New Password</label>
+                                    <input type="password" id="newPassword" required placeholder="••••••••">
+                                </div>
+                                <small id="changePasswordError" class="form-error"></small>
+                                <button type="submit" class="btn btn-primary" id="changePasswordBtn">Update Password</button>
+                            </form>
                         </div>
                     </div>
 

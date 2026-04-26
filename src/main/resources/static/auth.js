@@ -1,6 +1,6 @@
 // auth.js
 const Auth = {
-    TOKEN_KEY: 'payloadwatch_jwt',
+    TOKEN_KEY: 'jwt',
 
     setToken(token) {
         localStorage.setItem(this.TOKEN_KEY, token);
@@ -24,7 +24,10 @@ const Auth = {
 // route guard
 document.addEventListener('DOMContentLoaded', () => {
     // enforce auth on protected pages
-    if (!window.location.pathname.includes('login.html')) {
+    const path = window.location.pathname;
+    const isPublicPage = path.includes('login.html') || path.includes('signup.html');
+    
+    if (!isPublicPage) {
         if (!Auth.isAuthenticated()) {
             window.location.replace('login.html');
         }

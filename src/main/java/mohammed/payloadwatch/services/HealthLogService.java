@@ -22,9 +22,9 @@ public class HealthLogService {
     }
 
     // Get monitor history
-    public List<HealthLogResponse> getMonitorHistory(Long monitorId, String cognitoSub, Instant since) {
+    public List<HealthLogResponse> getMonitorHistory(Long monitorId, Long userId, Instant since) {
         // Fetch recent logs for the authenticated owner only
-        List<HealthLog> logs = healthLogRepository.findByMonitorIdAndMonitorUserCognitoSubAndTimestampAfter(monitorId, cognitoSub, since);
+        List<HealthLog> logs = healthLogRepository.findByMonitorIdAndMonitorUserIdAndTimestampAfter(monitorId, userId, since);
 
         // Map logs to DTOs for frontend
         List<HealthLogResponse> responses = new ArrayList<>();

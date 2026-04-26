@@ -5,12 +5,9 @@ import mohammed.payloadwatch.dto.MonitorResponse;
 import mohammed.payloadwatch.entities.Monitor;
 import mohammed.payloadwatch.entities.User;
 import mohammed.payloadwatch.services.MonitorService;
-import mohammed.payloadwatch.services.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -18,52 +15,38 @@ import java.util.List;
 public class MonitorController {
 
     private final MonitorService monitorService;
-    private final UserService userService;
 
-    public MonitorController(MonitorService monitorService, UserService userService) {
-        this.userService = userService;
+    public MonitorController(MonitorService monitorService) {
         this.monitorService = monitorService;
     }
 
     @GetMapping()
-    public List<MonitorResponse> getMonitorsByCognitoSub(@AuthenticationPrincipal Jwt jwt) {
-        User user = userService.getOrCreateUser(jwt);
-
-        return monitorService.getAllMonitorsForUser(user.getCognitoSub());
+    public List<MonitorResponse> getMonitorsByUserId(@AuthenticationPrincipal User user) {
+        return monitorService.getAllMonitorsForUser(user.getId());
     }
 
     @PostMapping()
-    public Monitor createMonitor(@AuthenticationPrincipal Jwt jwt, @RequestBody MonitorRequest monitorRequest) {
-        User user = userService.getOrCreateUser(jwt);
-
-        return monitorService.createMonitor(user.getCognitoSub(), monitorRequest);
+    public Monitor createMonitor(@AuthenticationPrincipal User user, @RequestBody MonitorRequest monitorRequest) {
+        return monitorService.createMonitor(user.getId(), monitorRequest);
     }
 
     @PutMapping("/{monitorId}")
-    public Monitor updateMonitor(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId, @RequestBody MonitorRequest monitorRequest) {
-        User user = userService.getOrCreateUser(jwt);
-
-        return monitorService.updateMonitor(user.getCognitoSub(), monitorId, monitorRequest);
+    public Monitor updateMonitor(@AuthenticationPrincipal User user, @PathVariable Long monitorId, @RequestBody MonitorRequest monitorRequest) {
+        return monitorService.updateMonitor(user.getId(), monitorId, monitorRequest);
     }
 
     @DeleteMapping("/{monitorId}")
-    public void deleteMonitor(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId) {
-        User user = userService.getOrCreateUser(jwt);
-
-        monitorService.deleteMonitor(user.getCognitoSub(), monitorId);
+    public void deleteMonitor(@AuthenticationPrincipal User user, @PathVariable Long monitorId) {
+        monitorService.deleteMonitor(user.getId(), monitorId);
     }
 
     @GetMapping("/{monitorId}/activity")
-    public boolean getMonitorActivity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId) {
-        User user = userService.getOrCreateUser(jwt);
-
-        return monitorService.getMonitorByIdAndCognitoSub(monitorId, user.getCognitoSub()).isActive();
+    public boolean getMonitorActivity(@AuthenticationPrincipal User user, @PathVariable Long monitorId) {
+        return monitorService.getMonitorByIdAndUserId(monitorId, user.getId()).isActive();
     }
 
     @PatchMapping("/{monitorId}/activity")
-    public Monitor updateMonitorActivity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long monitorId, @RequestParam Boolean isActive) {
-        User user = userService.getOrCreateUser(jwt);
-
-        return monitorService.updateMonitorActivity(monitorId, user.getCognitoSub(), isActive);
+    public void updateMonitorActivity(@AuthenticationPrincipal User user, @PathVariable Long monitorId, @RequestParam("isActive") Boolean isActive) {
+        monitorService.updateMonitorActivity(monitorId, user.getId(), isActive);
     }
 }
