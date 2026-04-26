@@ -9,7 +9,7 @@ import java.time.Instant;
 public interface HealthLogRepository extends JpaRepository<HealthLog, Long> {
 
     // get recent health logs scoped to the owning user
-    List<HealthLog> findByMonitorIdAndMonitorUserCognitoSubAndTimestampAfter(Long monitorId, String cognitoSub, Instant since);
+    List<HealthLog> findByMonitorIdAndMonitorUserIdAndTimestampAfter(Long monitorId, Long userId, Instant since);
 
     // get latest health log
     HealthLog findFirstByMonitorIdOrderByTimestampDesc(Long monitorId);

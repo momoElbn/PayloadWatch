@@ -28,8 +28,8 @@ const API = {
             console.log(`[Network] ${config.method || 'GET'} ${API_BASE_URL}${endpoint}`);
             const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-            // refresh expired token
-            if (response.status === 401) {
+            // Handle expired or invalid token (401 Unauthorized or 403 Forbidden)
+            if (response.status === 401 || response.status === 403) {
                 localStorage.removeItem('jwt');
                 window.location.href = 'login.html';
                 return null;

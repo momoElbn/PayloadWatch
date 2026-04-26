@@ -109,39 +109,31 @@ document.addEventListener('DOMContentLoaded', () => {
             signupBtn.disabled = true;
             signupBtn.innerText = 'Creating...';
 
-            // fetch config from backend
-            const configResponse = await fetch('/api/public/config');
-            if (!configResponse.ok) throw new Error('Failed to load configuration');
-            const config = await configResponse.json();
-
-            const clientId = config.cognitoClientId;
-            const region = config.cognitoRegion;
-
-            const response = await fetch(`https://cognito-idp.${region}.amazonaws.com/`, {
+            const response = await fetch('/api/public/auth/signup', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-amz-json-1.1',
-                    'X-Amz-Target': 'AWSCognitoIdentityProviderService.SignUp'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    ClientId: clientId,
-                    Username: email,
-                    Password: password
+                    email: email,
+                    password: password
                 })
             });
 
-            const data = await response.json();
-
             if (response.ok) {
-                const userEmail = emailInput.value;
-                window.location.href = `verify.html?email=${encodeURIComponent(userEmail)}`;
+                const data = await response.json();
+                const jwt = data.token; // AuthResponse returns 'token'
+                localStorage.setItem('jwt', jwt);
+                
+                // Immediately redirect to dashboard since we don't have email verification anymore
+                window.location.href = 'index.html';
                 return;
             }
 
-            const message = data.message || 'Please check your password requirements.';
+            const message = await response.text() || 'Please check your password requirements.';
             if (message.toLowerCase().includes('password')) {
                 setFieldError(passwordInput, passwordError, message);
-            } else if (message.toLowerCase().includes('email') || message.toLowerCase().includes('username')) {
+            } else if (message.toLowerCase().includes('email') || message.toLowerCase().includes('username') || message.toLowerCase().includes('taken')) {
                 setFieldError(emailInput, emailError, message);
             } else {
                 setFormError(message);

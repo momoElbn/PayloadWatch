@@ -29,11 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('loginBtn');
 
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('verified') === 'true' && successMessage) {
-        successMessage.classList.add('show');
-        // Remove query params so refresh does not repeatedly display the banner.
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
+    // Removed verification logic
 
     function setFieldError(inputEl, errorEl, message) {
         if (inputEl) inputEl.classList.add('error');
@@ -128,41 +124,26 @@ document.addEventListener('DOMContentLoaded', () => {
             loginBtn.disabled = true;
             loginBtn.innerText = 'Signing In...';
 
-            // fetch config from backend
-            const configResponse = await fetch('/api/public/config');
-            if (!configResponse.ok) throw new Error('Failed to load configuration');
-            const config = await configResponse.json();
-
-            const clientId = config.cognitoClientId;
-            const region = config.cognitoRegion;
-
-            // call cognito
-            const response = await fetch(`https://cognito-idp.${region}.amazonaws.com/`, {
+            const response = await fetch('/api/public/auth/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-amz-json-1.1',
-                    'X-Amz-Target': 'AWSCognitoIdentityProviderService.InitiateAuth'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    AuthFlow: 'USER_PASSWORD_AUTH',
-                    ClientId: clientId,
-                    AuthParameters: {
-                        USERNAME: email,
-                        PASSWORD: password
-                    }
+                    email: email,
+                    password: password
                 })
             });
 
-            const data = await response.json();
-
-            if (response.ok && data.AuthenticationResult) {
-                const jwt = data.AuthenticationResult.IdToken;
+            if (response.ok) {
+                const data = await response.json();
+                const jwt = data.token; // AuthResponse returns 'token'
                 localStorage.setItem('jwt', jwt);
-                window.location.href = '/index.html';
+                window.location.href = 'index.html';
                 return;
             }
 
-            const message = data.message || 'Invalid credentials.';
+            const message = await response.text() || 'Invalid credentials.';
             if (message.toLowerCase().includes('password')) {
                 setFieldError(passwordInput, passwordError, message);
             } else if (message.toLowerCase().includes('user') || message.toLowerCase().includes('email')) {

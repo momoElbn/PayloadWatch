@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MonitorRepository extends JpaRepository<Monitor, Long> {
-    //Find monitors by the Cognito sub of the user
-    @Query("SELECT m FROM Monitor m WHERE m.user.cognitoSub = :cognitoSub")
-    List<Monitor> findByUserCognitoSub(@Param("cognitoSub") String cognitoSub);
+    //Find monitors by the user id
+    List<Monitor> findByUserId(Long userId);
 
-    //Find monitors by the Cognito sub of the user and monitor id
-    @Query("SELECT m FROM Monitor m WHERE m.user.cognitoSub = :cognitoSub AND m.id = :monitorId")
-    Monitor findByUserCognitoSubAndMonitorId(@Param("cognitoSub") String cognitoSub, @Param("monitorId") Long monitorId);
+    //Find monitors by the user id and monitor id
+    Monitor findByUserIdAndId(Long userId, Long monitorId);
 
     // Grabs monitors that are due for a ping
     @Query(

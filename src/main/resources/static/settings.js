@@ -66,42 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const countEl = document.getElementById('settingMonitorCount');
 
                 if (emailEl) emailEl.value = user.email;
-                if (accountIdEl) accountIdEl.value = user.accountId;
-                if (planEl) planEl.innerText = user.planTier || 'Free Tier';
-                if (countEl) countEl.innerText = user.monitorsTracked;
-
-                // --- NEW PROGRESS BAR LOGIC ---
-                const planString = (user.planTier || '').toLowerCase();
-                const isPro = planString.includes('pro');
-                const maxMonitors = isPro ? 50 : 5; // The limit for the MVP Free Tier and Pro Tier
-                const currentMonitors = user.monitorsTracked || 0;
-
-                // Calculate the percentage (Math.min ensures it doesn't go over 100% visually)
-                const usagePercent = Math.min((currentMonitors / maxMonitors) * 100, 100);
 
                 if (headerCreateBtn) {
-                    if (currentMonitors >= maxMonitors) {
-                        headerCreateBtn.style.opacity = '0.5';
-                        headerCreateBtn.style.pointerEvents = 'none';
-                        headerCreateBtn.innerText = 'Limit Reached';
-                    } else {
-                        headerCreateBtn.style.opacity = '1';
-                        headerCreateBtn.style.pointerEvents = 'auto';
-                        headerCreateBtn.innerText = '+ Create Monitor';
-                    }
+                    headerCreateBtn.style.opacity = '1';
+                    headerCreateBtn.style.pointerEvents = 'auto';
+                    headerCreateBtn.innerText = '+ Create Monitor';
                 }
-
-                const progressBar = document.getElementById('settingProgressBar');
-                const progressText = document.getElementById('settingProgressText');
-
-                if (progressBar) {
-                    progressBar.style.width = `${usagePercent}%`;
-                }
-
-                if (progressText) {
-                    progressText.innerText = `You are using ${usagePercent.toFixed(0)}% of your monitor limit (${currentMonitors}/${maxMonitors}).`;
-                }
-                // ------------------------------
 
                 // Set the toggles to match DB state
                 if (timezoneSelect) timezoneSelect.value = user.timeZonePreference || 'UTC';
@@ -159,6 +129,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Save the choice to the database!
             saveSettingsToServer();
+        });
+    }
+
+    // Password Change Logic
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const errorEl = document.getElementById('changePasswordError');
+            const btn = document.getElementById('changePasswordBtn');
+            
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.classList.remove('show');
+            }
+
+            try {
+                btn.disabled = true;
+                btn.innerText = 'Updating...';
+
+                await API.request('/users/me/password', {
+                    method: 'PUT',
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                if (window.showToast) window.showToast('Password updated successfully!', 'success');
+                changePasswordForm.reset();
+            } catch (error) {
+                if (errorEl) {
+                    errorEl.textContent = error.message || 'Error updating password';
+                    errorEl.classList.add('show');
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Update Password';
+            }
         });
     }
 });

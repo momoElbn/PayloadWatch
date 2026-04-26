@@ -29,8 +29,8 @@ public class MonitorService {
 
     // READ
 
-    public List<MonitorResponse> getAllMonitorsForUser(String cognitoSub) {
-        List<Monitor> monitors = monitorRepository.findByUserCognitoSub(cognitoSub);
+    public List<MonitorResponse> getAllMonitorsForUser(Long userId) {
+        List<Monitor> monitors = monitorRepository.findByUserId(userId);
         List<MonitorResponse> monitorResponses = new ArrayList<>();
 
         for (Monitor monitor: monitors) {
@@ -56,36 +56,18 @@ public class MonitorService {
         return monitorResponses;
     }
 
-    public Monitor getMonitorByIdAndCognitoSub(Long monitorId, String cognitoSub) {
-        return monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
+    public Monitor getMonitorByIdAndUserId(Long monitorId, Long userId) {
+        return monitorRepository.findByUserIdAndId(userId, monitorId);
     }
 
     // CREATE
     @Transactional
-    public Monitor createMonitor(String cognitoSub, MonitorRequest request) {
-        User user = userRepository.findByCognitoSub(cognitoSub);
+    public Monitor createMonitor(Long userId, MonitorRequest request) {
+        User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
-            System.out.println("User not found for cognitoSub: " + cognitoSub);
+            System.out.println("User not found for userId: " + userId);
             return null;
-        }
-
-        // Get current monitor count
-        int currentMonitorCount = getAllMonitorsForUser(cognitoSub).size();
-
-        // Enforce monitor limits
-        boolean isPro = "PRO".equalsIgnoreCase(user.getPlanTier());
-        int maxMonitors = isPro ? 50 : 5;
-
-        if (currentMonitorCount >= maxMonitors) {
-            String errorMessage = isPro
-                ? "You have reached your monitor limit (" + maxMonitors + ")."
-                : "You have reached your monitor limit (" + maxMonitors + "). Please upgrade your plan for more monitors.";
-
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    errorMessage
-            );
         }
 
         Monitor monitor = new Monitor();
@@ -111,11 +93,11 @@ public class MonitorService {
 
     // UPDATE
     @Transactional
-    public Monitor updateMonitor(String cognitoSub, Long monitorId, MonitorRequest request) {
-        Monitor monitor = monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
+    public Monitor updateMonitor(Long userId, Long monitorId, MonitorRequest request) {
+        Monitor monitor = monitorRepository.findByUserIdAndId(userId, monitorId);
 
         if (monitor == null) {
-            System.out.println("Monitor not found for id: " + monitorId + " and cognitoSub: " + cognitoSub);
+            System.out.println("Monitor not found for id: " + monitorId + " and userId: " + userId);
             return null;
         }
 
@@ -140,26 +122,25 @@ public class MonitorService {
     }
 
     @Transactional
-    public Monitor updateMonitorActivity(Long monitorId, String cognitoSub, Boolean isActive) {
-        Monitor monitor = monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
+    public void updateMonitorActivity(Long monitorId, Long userId, Boolean isActive) {
+        Monitor monitor = monitorRepository.findByUserIdAndId(userId, monitorId);
 
         if (monitor == null) {
-            System.out.println("Monitor not found for id: " + monitorId + " and cognitoSub: " + cognitoSub);
-            return null;
+            System.out.println("Monitor not found for id: " + monitorId + " and userId: " + userId);
+            return;
         }
 
         monitor.setActive(isActive);
-
-        return monitorRepository.save(monitor);
+        monitorRepository.save(monitor);
     }
 
     // DELETE
     @Transactional
-    public void deleteMonitor(String cognitoSub, Long monitorId) {
-        Monitor monitor = monitorRepository.findByUserCognitoSubAndMonitorId(cognitoSub, monitorId);
+    public void deleteMonitor(Long userId, Long monitorId) {
+        Monitor monitor = monitorRepository.findByUserIdAndId(userId, monitorId);
 
         if (monitor == null) {
-            System.out.println("Monitor not found for id: " + monitorId + " and cognitoSub: " + cognitoSub);
+            System.out.println("Monitor not found for id: " + monitorId + " and userId: " + userId);
             return;
         }
 
