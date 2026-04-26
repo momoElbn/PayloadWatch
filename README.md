@@ -36,6 +36,9 @@ https://github.com/user-attachments/assets/2323d195-381c-4b89-9861-b0b434435224
 ### ☁️ Cloud Infrastructure (AWS)
 PayloadWatch is designed for high availability and is fully deployed on a serverless AWS architecture:
 
+### The Cloud Infrastructure was dropped in the v2.0.0 release because of high costs. 
+### The current version (v2.0.0) is running locally using Docker Compose, and the cloud infrastructure will be reintroduced in a future release once the project gains more traction.
+
 **Networking & Traffic Routing:**
   
   * **Route 53 & ACM:** Custom domain routing (`payload-watch.com`) secured with free public SSL certificates via AWS Certificate Manager.
@@ -92,16 +95,19 @@ DB_NAME=your_database_name
 DB_URL=jdbc:postgresql://db:5432/${DB_NAME}
 DB_USERNAME=postgres
 DB_PASSWORD=your_secure_password
+JWT_SECRET=your_jwt_secret_key
+```
 
-# AWS Cognito Configuration
-# Example: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_abcd12345
-COGNITO_ISSUER_URI=https://cognito-idp.[region].amazonaws.com/[your_pool_id]
+```application-local.properties
+# application-local.properties
+# Copy this file to your Spring Boot application and replace the placeholders with your own values
+# This will directly connect the values to the application.properties file
 
-# Example: 7abc1234567890defghijk
-COGNITO_CLIENT_ID=your_cognito_app_client_id
+spring.datasource.username=your_db_username
+spring.datasource.password=your_db_password
+spring.datasource.url=jdbc:postgresql://localhost:5433/your_db_name
 
-# Infrastructure Region
-AWS_REGION=your_aws_region
+jwt.secret=your_jwt_secret_key
 ```
 
 ### 3. Spin up the Docker Container
