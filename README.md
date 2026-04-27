@@ -65,7 +65,7 @@ PayloadWatch is designed for high availability and is fully deployed on a server
 ### 🗄️ Database Architecture
 PayloadWatch is built on a fully normalized **PostgreSQL** relational database. The schema separates core user data from the high-volume background logging engine to ensure scalable polling performance.
 
-<img width="1194" height="905" alt="Database-Diagram" src="https://github.com/user-attachments/assets/aaa6ccc8-88e2-43e6-898e-483b9626d87c" />
+<img width="634" height="909" alt="Screenshot 2026-04-27 at 10 36 48 AM" src="https://github.com/user-attachments/assets/0c45a94f-1cf0-4253-bdee-d33aa2d21a15" />
 
 ---
 
@@ -75,8 +75,6 @@ You can spin up the entire PayloadWatch backend and database in seconds using Do
 
 ### Prerequisites
 * **Docker Desktop** installed and running.
-* An **AWS Account** (for Cognito authentication).
-  * **Note on Authentication:** PayloadWatch uses AWS Cognito for secure, stateless identity management. To run this locally, you'll need to create a User Pool in your own AWS account and update the .env file with your ISSUER_URI and CLIENT_ID. This ensures your local development data remains entirely isolated and under your control.
 
 ### 1. Clone the Repository
 ```bash
@@ -135,9 +133,6 @@ The following features are currently in active development and will be rolled ou
 
 ### Event-Driven Alerting (Amazon SES): 
 Automated, low-latency email notifications dispatched the moment the engine detects a breached JSON contract or degraded API performance.
-
-### Subscription Tiers: 
-Implementation of tiered account usage, unlocking premium features such as higher-frequency polling intervals and extended monitor limit.
 
 ---
 
