@@ -1,6 +1,7 @@
 package mohammed.payloadwatch.services;
 
 import jakarta.transaction.Transactional;
+import mohammed.payloadwatch.config.UrlValidator;
 import mohammed.payloadwatch.dto.ContractDto;
 import mohammed.payloadwatch.dto.MonitorRequest;
 import mohammed.payloadwatch.dto.MonitorResponse;
@@ -63,6 +64,10 @@ public class MonitorService {
     // CREATE
     @Transactional
     public Monitor createMonitor(Long userId, MonitorRequest request) {
+        if (!UrlValidator.isSafe(request.getUrl())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid or unsafe URL provided.");
+        }
+
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
