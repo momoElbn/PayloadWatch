@@ -50,7 +50,7 @@ public class SecurityConfig {
                 // configure endpoints
                 .authorizeHttpRequests(authz -> authz
                         // public static files
-                        .requestMatchers("/", "/index.html", "/login.html", "/signup.html", "/verify.html", "/js/**", "/css/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/*.html", "/*.js", "/*.css", "/images/**").permitAll()
                         // health check endpoint
                         .requestMatchers("/api/health").permitAll()
                         // public api config
