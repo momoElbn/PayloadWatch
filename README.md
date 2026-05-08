@@ -36,9 +36,6 @@ https://github.com/user-attachments/assets/2323d195-381c-4b89-9861-b0b434435224
 ### ☁️ Cloud Infrastructure (AWS)
 PayloadWatch is designed for high availability and is fully deployed on a serverless AWS architecture:
 
-### The Cloud Infrastructure was dropped in the v2.0.0 release because of high costs. 
-### The current version (v2.0.0) is running locally using Docker Compose, and the cloud infrastructure will be reintroduced in a future release once the project gains more traction.
-
 **Networking & Traffic Routing:**
   
   * **Route 53 & ACM:** Custom domain routing (`payload-watch.com`) secured with free public SSL certificates via AWS Certificate Manager.
